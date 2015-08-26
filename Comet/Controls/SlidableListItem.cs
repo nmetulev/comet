@@ -30,9 +30,7 @@ namespace Comet.Controls
 
         public event EventHandler RightCommandActivated;
         public event EventHandler LeftCommandActivated;
-
-        private const double ACTIVATED_THRESHOLD = 200;
-
+        
         public SlidableListItem()
         {
             this.DefaultStyleKey = typeof(SlidableListItem);
@@ -53,6 +51,18 @@ namespace Comet.Controls
             Setup();
             base.OnApplyTemplate();
         }
+
+
+
+        public double ActivationWidth
+        {
+            get { return (double)GetValue(ActivationWidthProperty); }
+            set { SetValue(ActivationWidthProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ActivationWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ActivationWidthProperty =
+            DependencyProperty.Register("ActivationWidth", typeof(double), typeof(SlidableListItem), new PropertyMetadata(200));
 
 
 
@@ -118,15 +128,25 @@ namespace Comet.Controls
 
 
 
-        public Brush CommandForeground
+        public Brush LeftCommandForeground
         {
-            get { return (Brush)GetValue(CommandForegroundProperty); }
-            set { SetValue(CommandForegroundProperty, value); }
+            get { return (Brush)GetValue(LeftCommandForegroundProperty); }
+            set { SetValue(LeftCommandForegroundProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for CommandForeground.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CommandForegroundProperty =
-            DependencyProperty.Register("CommandForeground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.White)));
+        public static readonly DependencyProperty LeftCommandForegroundProperty =
+            DependencyProperty.Register("LeftCommandForeground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.White)));
+
+        public Brush RightCommandForeground
+        {
+            get { return (Brush)GetValue(RightCommandForegroundProperty); }
+            set { SetValue(RightCommandForegroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CommandForeground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RightCommandForegroundProperty =
+            DependencyProperty.Register("RightCommandForeground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.White)));
 
 
 
@@ -139,9 +159,6 @@ namespace Comet.Controls
         // Using a DependencyProperty as the backing store for LeftCommandForeground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LeftCommandBackgroundProperty =
             DependencyProperty.Register("LeftCommandBackground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.LightGray)));
-
-
-
 
         public Brush RightCommandBackground
         {
@@ -234,6 +251,8 @@ namespace Comet.Controls
             contentStoryboard = new Storyboard();
             contentStoryboard.Children.Add(contentAnimation);
 
+            slider.Background = LeftCommandBackground as SolidColorBrush;
+
         }
 
         private void ContentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -245,12 +264,19 @@ namespace Comet.Controls
             contentAnimation.From = x;
             contentStoryboard.Begin();
 
-            if (x < -ACTIVATED_THRESHOLD)
+            leftCommandTransform.TranslateX = 0;
+            rightCommandTransform.TranslateX = 0;
+            leftCommandPanel.Opacity = 1;
+            rightCommandPanel.Opacity = 1;
+
+            if (x < -ActivationWidth)
             {
                 if (RightCommandActivated != null)
                     RightCommandActivated(this, new EventArgs());
+                if (RightCommand != null)
+                    RightCommand.Execute(null);
             }
-            else if (x > ACTIVATED_THRESHOLD)
+            else if (x > ActivationWidth)
             {
                 if (LeftCommandActivated != null)
                     LeftCommandActivated(this, new EventArgs());
@@ -275,7 +301,7 @@ namespace Comet.Controls
                 leftCommandPanel.Opacity = 1;
                 rightCommandPanel.Opacity = 0;
 
-                if (abs < 200)
+                if (abs < ActivationWidth)
                     leftCommandTransform.TranslateX = transform.TranslateX / 2;
                 else
                     leftCommandTransform.TranslateX = 20;
@@ -287,7 +313,7 @@ namespace Comet.Controls
                 rightCommandPanel.Opacity = 1;
                 leftCommandPanel.Opacity = 0;
 
-                if (abs < 200)
+                if (abs < ActivationWidth)
                     rightCommandTransform.TranslateX = transform.TranslateX / 2;
                 else
                     rightCommandTransform.TranslateX = -20;

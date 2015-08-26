@@ -4,41 +4,38 @@
     xmlns:local="using:Comet.Controls">
 
     <Style TargetType="local:SlidableListItem" >
-        <Setter Property="CommandForeground" Value="White"></Setter>
+        <Setter Property="LeftCommandForeground" Value="White"></Setter>
+        <Setter Property="RightCommandForeground" Value="White"></Setter>
         <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+        <Setter Property="Background" Value="White"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SlidableListItem">
-                        <Grid>
-                            <Grid x:Name="Slider">
-                                <!--<Grid.ColumnDefinitions>-->
-                                    <!--<ColumnDefinition x:Name="leftColumn"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition x:Name="rightColumn"></ColumnDefinition>-->
-                                <!--</Grid.ColumnDefinitions>-->
-                                <StackPanel x:Name="leftCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                    <SymbolIcon Symbol="{TemplateBinding LeftIcon}" Foreground="{TemplateBinding CommandForeground}"></SymbolIcon>
-                                    <TextBlock FontSize="15" Margin="10,0,0,0" Text="{TemplateBinding LeftLabel}" Foreground="{TemplateBinding CommandForeground}"></TextBlock>
-                                    <StackPanel.RenderTransform>
-                                        <CompositeTransform></CompositeTransform>
-                                    </StackPanel.RenderTransform>
-                                </StackPanel>
+                    <Grid>
+                        <Grid x:Name="Slider">
+                            <StackPanel x:Name="leftCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <SymbolIcon Symbol="{TemplateBinding LeftIcon}" Foreground="{TemplateBinding LeftCommandForeground}"></SymbolIcon>
+                                <TextBlock FontSize="15" Margin="10,0,0,0" Text="{TemplateBinding LeftLabel}" Foreground="{TemplateBinding LeftCommandForeground}"></TextBlock>
+                                <StackPanel.RenderTransform>
+                                    <CompositeTransform></CompositeTransform>
+                                </StackPanel.RenderTransform>
+                            </StackPanel>
 
-                                <StackPanel x:Name="rightCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                    <TextBlock FontSize="15" Margin="0,0,10,0" Text="{TemplateBinding RightLabel}" Foreground="{TemplateBinding CommandForeground}"></TextBlock>
-                                    <SymbolIcon Symbol="{TemplateBinding RightIcon}" Foreground="{TemplateBinding CommandForeground}"></SymbolIcon>
-                                    <StackPanel.RenderTransform>
-                                        <CompositeTransform></CompositeTransform>
-                                    </StackPanel.RenderTransform>
-                                </StackPanel>
-                            </Grid>
-                            <Grid ManipulationMode="TranslateX" x:Name="ContentGrid" Background="White">
-                                <ContentPresenter />
-                                <Grid.RenderTransform>
-                                    <CompositeTransform x:Name="ContentTransform"/>
-                                </Grid.RenderTransform>
-                            </Grid>
+                            <StackPanel x:Name="rightCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <TextBlock FontSize="15" Margin="0,0,10,0" Text="{TemplateBinding RightLabel}" Foreground="{TemplateBinding RightCommandForeground}"></TextBlock>
+                                <SymbolIcon Symbol="{TemplateBinding RightIcon}" Foreground="{TemplateBinding RightCommandForeground}"></SymbolIcon>
+                                <StackPanel.RenderTransform>
+                                    <CompositeTransform></CompositeTransform>
+                                </StackPanel.RenderTransform>
+                            </StackPanel>
                         </Grid>
+                        <Grid ManipulationMode="TranslateX" x:Name="ContentGrid" Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                            <Grid.RenderTransform>
+                                <CompositeTransform x:Name="ContentTransform"/>
+                            </Grid.RenderTransform>
+                        </Grid>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
