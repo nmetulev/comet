@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="Test.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Test"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <SplitView DisplayMode="CompactOverlay" x:Name="splitview">
+        <SplitView.Pane>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <AppBarButton Icon="ClosePane" Click="AppBarButton_Click"></AppBarButton>
+                <ListView x:Name="list" Grid.Row="1" SelectionChanged="list_SelectionChanged" VerticalAlignment="Top"></ListView>
+            </Grid>
+        </SplitView.Pane>
+        <Frame x:Name="frame"></Frame>
+    </SplitView>
+</Page>
