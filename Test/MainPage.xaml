@@ -7,17 +7,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <SplitView DisplayMode="CompactOverlay" x:Name="splitview">
-        <SplitView.Pane>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <AppBarButton Icon="ClosePane" Click="AppBarButton_Click"></AppBarButton>
-                <ListView x:Name="list" Grid.Row="1" SelectionChanged="list_SelectionChanged" VerticalAlignment="Top"></ListView>
-            </Grid>
-        </SplitView.Pane>
-        <Frame x:Name="frame"></Frame>
-    </SplitView>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Background="LightGray" Height="48">
+            <AppBarButton Icon="ClosePane" Click="AppBarButton_Click"></AppBarButton>
+        </Border>
+
+        <SplitView Grid.Row="1" DisplayMode="Overlay" x:Name="splitview" IsPaneOpen="True">
+            <SplitView.Pane>
+                <Grid>
+                    
+                    <ListView x:Name="list"  SelectionChanged="list_SelectionChanged" VerticalAlignment="Top"></ListView>
+                </Grid>
+            </SplitView.Pane>
+            <Frame x:Name="frame"></Frame>
+        </SplitView>
+    </Grid>
+    
 </Page>

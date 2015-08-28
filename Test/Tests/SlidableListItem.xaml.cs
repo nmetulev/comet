@@ -30,9 +30,12 @@ namespace Test.Tests
             this.InitializeComponent();
             List<Item> items = new List<Item>();
 
-            items.Add(new Item() { Title = "Item1" });
-            items.Add(new Item() { Title = "Item2" });
-            items.Add(new Item() { Title = "Item3" });
+            for (var i = 0; i<1000; i++)
+            {
+                items.Add(new Item() { Title = "Item " + i });
+
+            }
+            
 
             Items = items;
         }
