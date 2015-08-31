@@ -34,7 +34,6 @@ namespace Comet.Controls
         public SlidableListItem()
         {
             this.DefaultStyleKey = typeof(SlidableListItem);
-            Button butt = new Button();
         }
 
         protected override void OnApplyTemplate()
