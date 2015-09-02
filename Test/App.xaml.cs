@@ -41,10 +41,11 @@ namespace Test
         {
 
 #if DEBUG
-            //if (System.Diagnostics.Debugger.IsAttached)
-            //{
-            //    this.DebugSettings.EnableFrameRateCounter = true;
-            //}
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                //this.DebugSettings.EnableFrameRateCounter = true;
+                //this.DebugSettings.EnableRedrawRegions = true;
+            }
 #endif
 
             Frame rootFrame = Window.Current.Content as Frame;

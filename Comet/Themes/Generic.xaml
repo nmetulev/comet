@@ -60,6 +60,7 @@
         <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
         <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
+        <Setter Property="OverscrollCoefficient" Value="0.5"></Setter>
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>
@@ -80,7 +81,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:RefreshableListView">
-                    <Border x:Name="Content"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                    <Border x:Name="Root"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
                         <ScrollViewer x:Name="ScrollViewer" 
                                       AutomationProperties.AccessibilityView="Raw" 
                                       BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" 
@@ -95,17 +96,13 @@
                                       VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" 
                                       VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" 
                                       ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="*"></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Border x:Name="RefreshIndicator" VerticalAlignment="Bottom">
-                                    <TextBlock HorizontalAlignment="Center">refresh</TextBlock>
-                                    
+                            <Grid x:Name="ScrollerContent">
+                                <Border x:Name="RefreshIndicator" VerticalAlignment="Top">
+                                    <ProgressRing HorizontalAlignment="Center" FontSize="20" IsActive="True"></ProgressRing>
+                                    <Border.RenderTransform>
+                                        <CompositeTransform x:Name="RefreshIndicatorTransform"></CompositeTransform>
+                                    </Border.RenderTransform>
                                 </Border>
-                                <Border x:Name="temp"></Border>
-                                <Border x:Name="temp2"></Border>
                                 <ItemsPresenter FooterTransitions="{TemplateBinding FooterTransitions}" 
                                                 FooterTemplate="{TemplateBinding FooterTemplate}" 
                                                 Footer="{TemplateBinding Footer}" 
@@ -114,7 +111,11 @@
                                                 HeaderTransitions="{TemplateBinding HeaderTransitions}" 
                                                 Padding="{TemplateBinding Padding}"
                                                 Grid.Row="1"
-                                                x:Name="ItemsPresenter"/>
+                                                x:Name="ItemsPresenter">
+                                    <ItemsPresenter.RenderTransform>
+                                        <CompositeTransform x:Name="ContentTransform" TranslateY="0"></CompositeTransform>
+                                    </ItemsPresenter.RenderTransform>
+                                </ItemsPresenter>
                             </Grid>
                         </ScrollViewer>
                     </Border>

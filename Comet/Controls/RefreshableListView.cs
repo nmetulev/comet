@@ -1,27 +1,33 @@
-﻿// code and inspiration from http://blogs.u2u.be/diederik/post/2015/06/01/A-pull-to-refresh-ListView-for-Windows-81-Universal-Apps.aspx
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace Comet.Controls
 {
     public class RefreshableListView : ListView
     {
+        private Border Root;
         private Border RefreshIndicator;
-        private ScrollViewer scroller;
-        private CompositeTransform transform;
-        private DispatcherTimer timer;
+        private CompositeTransform RefreshIndicatorTransform;
+        private ScrollViewer Scroller;
+        private CompositeTransform ContentTransform;
+        private Grid ScrollerContent;
 
+        public event EventHandler RefreshCommand;
 
-        private double RefreshHeaderHeight = 40;
+        private double lastOffset = 0.0;
+        private double pullDistance = 0.0;
+
+        private bool manipulating = false;
 
         public RefreshableListView()
         {
@@ -39,75 +45,90 @@ namespace Comet.Controls
 
         protected override void OnApplyTemplate()
         {
-            
+            Root = GetTemplateChild("Root") as Border;
 
-            scroller = this.GetTemplateChild("ScrollViewer") as ScrollViewer;
-            transform = new CompositeTransform();
-            scroller.RenderTransform = transform;
-            scroller.ViewChanging += Scroller_ViewChanging;
-            //scroller.DirectManipulationCompleted += Scroller_DirectManipulationCompleted;
-            //scroller.DirectManipulationStarted += Scroller_DirectManipulationStarted;
-            scroller.ManipulationStarted += Scroller_ManipulationStarted;
-            scroller.ManipulationMode = Windows.UI.Xaml.Input.ManipulationModes.TranslateY;
+            Scroller = this.GetTemplateChild("ScrollViewer") as ScrollViewer;
+            Scroller.DirectManipulationCompleted += Scroller_DirectManipulationCompleted;
+            Scroller.DirectManipulationStarted += Scroller_DirectManipulationStarted;
+
+            ContentTransform = GetTemplateChild("ContentTransform") as CompositeTransform;
+
+            ScrollerContent = GetTemplateChild("ScrollerContent") as Grid;
 
             RefreshIndicator = GetTemplateChild("RefreshIndicator") as Border;
+            RefreshIndicatorTransform = GetTemplateChild("RefreshIndicatorTransform") as CompositeTransform;
             RefreshIndicator.SizeChanged += (s, e) =>
             {
-                transform.TranslateY = -RefreshIndicator.ActualHeight;
-                scroller.Margin = new Thickness(0, 0, 0, -RefreshIndicator.ActualHeight);
-                
+                RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
             };
+            
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(20);
-            timer.Tick += Timer_Tick;
-            timer.Start();
-
+            OverscrollMultiplier = (OverscrollCoefficient * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 
             base.OnApplyTemplate();
         }
-
-        private void Scroller_ManipulationStarted(object sender, Windows.UI.Xaml.Input.ManipulationStartedRoutedEventArgs e)
+        
+        #region dependencyProperties
+        private double OverscrollMultiplier;
+        public double OverscrollCoefficient
         {
-
-        }
-
-        //private void Scroller_DirectManipulationStarted(object sender, object e)
-        //{
-        //    Debug.WriteLine("scrollerManipulationStarte, offset:" + scroller.VerticalOffset);
-        //    timer.Start();
-        //}
-
-        //private void Scroller_DirectManipulationCompleted(object sender, object e)
-        //{
-        //    Debug.WriteLine("scrollerManipulationEnded, offset:" + scroller.VerticalOffset);
-        //    timer.Stop();
-        //}
-
-        private void Timer_Tick(object sender, object e)
-        {
-            //Debug.WriteLine("timer, offset:" + scroller.VerticalOffset);
-            //var elem = GetTemplateChild("temp2") as Border;
-            //var content = GetTemplateChild("Content") as Border;
-            //Point elementBounds = elem.TransformToVisual(content).TransformPoint(new Point(0, 0));
-            //var offset = elementBounds.Y;
-            //(GetTemplateChild("temp") as Border).Height = offset > 0 ? offset * 2 : 0;
-            ////ind.Height = offset > 0 ? offset : 0;
-            //Debug.WriteLine(offset);
-
-        }
-
-        private void Scroller_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
-        {
-            if (e.NextView.VerticalOffset == 0)
+            get { return (double)GetValue(OverscrollCoefficientProperty); }
+            set
             {
-                timer.Start();
+                if (value >= 0 && value <= 1)
+                {
+                    OverscrollMultiplier = (value * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+                    SetValue(OverscrollCoefficientProperty, value);
+                }
+                else
+                    throw new IndexOutOfRangeException("OverscrollCoefficient has to be a double value between 0 and 1 inclusive.");
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for OverscrollCoefficient.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OverscrollCoefficientProperty =
+            DependencyProperty.Register("OverscrollCoefficient", typeof(double), typeof(RefreshableListView), new PropertyMetadata(0.5));
+
+        #endregion
+
+
+        private void Scroller_DirectManipulationStarted(object sender, object e)
+        {
+            manipulating = true;
+        }
+
+        private void Scroller_DirectManipulationCompleted(object sender, object e)
+        {
+            manipulating = false;
+            RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+            ContentTransform.TranslateY = 0;
+        }
+
+        private void CompositionTarget_Rendering(object sender, object e)
+        {
+            if (!manipulating || Scroller.VerticalOffset > 0) return;
+            Rect elementBounds = ScrollerContent.TransformToVisual(Root).TransformBounds(new Rect());
+
+            var offset = elementBounds.Y;
+            var delta = offset - lastOffset;
+            lastOffset = offset;
+
+            pullDistance += delta * OverscrollMultiplier;
+
+            if (pullDistance > 0)
+            {
+                ContentTransform.TranslateY = pullDistance - offset;
+                RefreshIndicatorTransform.TranslateY = pullDistance - offset - RefreshIndicator.ActualHeight;
             }
             else
             {
-                timer.Stop();
+                ContentTransform.TranslateY = 0;
+                RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+
             }
         }
+
     }
 
 
