@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid x:Name="Root">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -23,8 +23,13 @@
                     <ListView x:Name="list"  SelectionChanged="list_SelectionChanged" VerticalAlignment="Top"></ListView>
                 </Grid>
             </SplitView.Pane>
+            <Grid>
             <Frame x:Name="frame"></Frame>
+                    <!--<WebView x:Name="view"></WebView>-->
+                
+            </Grid>
         </SplitView>
+        <Image x:Name="Blured"></Image>
     </Grid>
     
 </Page>
