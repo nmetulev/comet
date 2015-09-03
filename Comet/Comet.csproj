@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Controls\RefreshableListView.cs" />
     <Compile Include="Controls\SlidableListItem.cs" />
+    <Compile Include="Extensions\XAMLExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\Comet.rd.xml" />
   </ItemGroup>

@@ -19,14 +19,11 @@
         <SplitView Grid.Row="1" DisplayMode="Overlay" x:Name="splitview" IsPaneOpen="True">
             <SplitView.Pane>
                 <Grid>
-                    
                     <ListView x:Name="list"  SelectionChanged="list_SelectionChanged" VerticalAlignment="Top"></ListView>
                 </Grid>
             </SplitView.Pane>
             <Grid>
-            <Frame x:Name="frame"></Frame>
-                    <!--<WebView x:Name="view"></WebView>-->
-                
+                <Frame x:Name="frame"></Frame>
             </Grid>
         </SplitView>
         <Image x:Name="Blured"></Image>

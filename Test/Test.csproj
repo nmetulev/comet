@@ -109,6 +109,9 @@
     <Compile Include="Tests\SlidableListItem.xaml.cs">
       <DependentUpon>SlidableListItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tests\UIElementToImage.xaml.cs">
+      <DependentUpon>UIElementToImage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -140,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tests\SlidableListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tests\UIElementToImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
