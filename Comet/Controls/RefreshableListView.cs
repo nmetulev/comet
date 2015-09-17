@@ -17,15 +17,16 @@ namespace Comet.Controls
     public class RefreshableListView : ListView
     {
         private Border Root;
-        private Border RefreshIndicator;
+        private Border RefreshIndicatorBorder;
         private CompositeTransform RefreshIndicatorTransform;
         private ScrollViewer Scroller;
         private CompositeTransform ContentTransform;
         private Grid ScrollerContent;
 
-        private TextBlock IndicatorContent;
+        private TextBlock DefaultIndicatorContent;
 
         public event EventHandler RefreshActivated;
+        public event EventHandler<RefreshProgressEventArgs> PullProgressChanged;
 
         private double lastOffset = 0.0;
         private double pullDistance = 0.0;
@@ -61,14 +62,15 @@ namespace Comet.Controls
 
             ScrollerContent = GetTemplateChild("ScrollerContent") as Grid;
 
-            RefreshIndicator = GetTemplateChild("RefreshIndicator") as Border;
+            RefreshIndicatorBorder = GetTemplateChild("RefreshIndicator") as Border;
             RefreshIndicatorTransform = GetTemplateChild("RefreshIndicatorTransform") as CompositeTransform;
 
-            IndicatorContent = GetTemplateChild("IndicatorContent") as TextBlock;
+            DefaultIndicatorContent = GetTemplateChild("DefaultIndicatorContent") as TextBlock;
+            DefaultIndicatorContent.Visibility = RefreshIndicatorContent == null ? Visibility.Visible : Visibility.Collapsed;
 
-            RefreshIndicator.SizeChanged += (s, e) =>
+            RefreshIndicatorBorder.SizeChanged += (s, e) =>
             {
-                RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+                RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             };
             
             CompositionTarget.Rendering += CompositionTarget_Rendering;
@@ -127,6 +129,23 @@ namespace Comet.Controls
 
 
 
+        public object RefreshIndicatorContent
+        {
+            get { return (object)GetValue(RefreshIndicatorContentProperty); }
+            set
+            {
+                if (DefaultIndicatorContent != null)
+                    DefaultIndicatorContent.Visibility = value == null ? Visibility.Visible : Visibility.Collapsed;
+                SetValue(RefreshIndicatorContentProperty, value);
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for RefreshIndicator.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RefreshIndicatorContentProperty =
+            DependencyProperty.Register("RefreshIndicatorContent", typeof(object), typeof(RefreshableListView), new PropertyMetadata(null));
+
+
+
         #endregion
 
 
@@ -139,7 +158,7 @@ namespace Comet.Controls
         private void Scroller_DirectManipulationCompleted(object sender, object e)
         {
             manipulating = false;
-            RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+            RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             ContentTransform.TranslateY = 0;
 
             if (refreshActivated)
@@ -152,7 +171,9 @@ namespace Comet.Controls
 
             refreshActivated = false;
             lastRefreshActivation = default(DateTime);
-            IndicatorContent.Text = "Pull to refresh";
+
+            if (RefreshIndicatorContent == null)
+                DefaultIndicatorContent.Text = "Pull to Refresh";
         }
 
 
@@ -178,20 +199,24 @@ namespace Comet.Controls
             if (pullDistance > 0)
             {
                 ContentTransform.TranslateY = pullDistance - offset;
-                RefreshIndicatorTransform.TranslateY = pullDistance - offset - RefreshIndicator.ActualHeight;
+                RefreshIndicatorTransform.TranslateY = pullDistance - offset - RefreshIndicatorBorder.ActualHeight;
             }
             else
             {
                 ContentTransform.TranslateY = 0;
-                RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+                RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
 
             }
+
+            var pullProgress = 0.0;
 
             if (pullDistance >= PullThreshold)
             {
                 lastRefreshActivation = DateTime.Now;
                 refreshActivated = true;
-                IndicatorContent.Text = "Relese to refresh";
+                pullProgress = 1.0;
+                if (RefreshIndicatorContent == null)
+                    DefaultIndicatorContent.Text = "Relese to Refresh";
             }
             else if (lastRefreshActivation != DateTime.MinValue)
             {
@@ -201,14 +226,35 @@ namespace Comet.Controls
                 {
                     refreshActivated = false;
                     lastRefreshActivation = default(DateTime);
-                    IndicatorContent.Text = "Pull to refresh";
+                    pullProgress = pullDistance / PullThreshold;
+                    if (RefreshIndicatorContent == null)
+                        DefaultIndicatorContent.Text = "Pull to Refresh";
+                }
+                else
+                {
+                    pullProgress = 1.0;
                 }
             }
-            
+            else
+            {
+                pullProgress = pullDistance / PullThreshold;
+            }
 
+            if (PullProgressChanged != null)
+            {
+                PullProgressChanged(this, new RefreshProgressEventArgs() { PullProgress = pullProgress });
+            }
             
         }
 
+    }
+
+    public class RefreshProgressEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Value from 0.0 to 1.0 where 1.0 is active
+        /// </summary>
+        public double PullProgress { get; set; }
     }
 
 
