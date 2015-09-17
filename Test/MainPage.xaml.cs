@@ -23,9 +23,9 @@ namespace Test
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             var testItems = new List<TestItem>();
-            testItems.Add(new TestItem() { Name = "UIElementToImage", Page = typeof(UIElementToImage) });
             testItems.Add(new TestItem() { Name = "RefreshableListView", Page = typeof(RefreshableListViewTest) });
             testItems.Add(new TestItem() { Name = "SlidableListItem", Page = typeof(SlidableListItem) });
+            testItems.Add(new TestItem() { Name = "Extension:UIElementToImage", Page = typeof(UIElementToImage) });
             list.ItemsSource = testItems;
             frame.Navigate(testItems[0].Page);
 
