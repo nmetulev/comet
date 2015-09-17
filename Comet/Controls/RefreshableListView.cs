@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
@@ -22,12 +23,17 @@ namespace Comet.Controls
         private CompositeTransform ContentTransform;
         private Grid ScrollerContent;
 
-        public event EventHandler RefreshCommand;
+        private TextBlock IndicatorContent;
+
+        public event EventHandler RefreshActivated;
 
         private double lastOffset = 0.0;
         private double pullDistance = 0.0;
 
         private bool manipulating = false;
+        DateTime lastRefreshActivation = default(DateTime);
+        bool refreshActivated = false;
+
 
         public RefreshableListView()
         {
@@ -57,6 +63,9 @@ namespace Comet.Controls
 
             RefreshIndicator = GetTemplateChild("RefreshIndicator") as Border;
             RefreshIndicatorTransform = GetTemplateChild("RefreshIndicatorTransform") as CompositeTransform;
+
+            IndicatorContent = GetTemplateChild("IndicatorContent") as TextBlock;
+
             RefreshIndicator.SizeChanged += (s, e) =>
             {
                 RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
@@ -70,6 +79,7 @@ namespace Comet.Controls
         }
         
         #region dependencyProperties
+
         private double OverscrollMultiplier;
         public double OverscrollCoefficient
         {
@@ -86,16 +96,44 @@ namespace Comet.Controls
             }
         }
 
-        // Using a DependencyProperty as the backing store for OverscrollCoefficient.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OverscrollCoefficientProperty =
             DependencyProperty.Register("OverscrollCoefficient", typeof(double), typeof(RefreshableListView), new PropertyMetadata(0.5));
+
+
+
+        public double PullThreshold
+        {
+            get { return (double)GetValue(PullThresholdProperty); }
+            set { SetValue(PullThresholdProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PullThreshold.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PullThresholdProperty =
+            DependencyProperty.Register("PullThreshold", typeof(double), typeof(RefreshableListView), new PropertyMetadata(100.0));
+
+
+
+
+        public ICommand RefreshCommand
+        {
+            get { return (ICommand)GetValue(RefreshCommandProperty); }
+            set { SetValue(RefreshCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RefreshCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RefreshCommandProperty =
+            DependencyProperty.Register("RefreshCommand", typeof(ICommand), typeof(RefreshableListView), new PropertyMetadata(null));
+
+
+
 
         #endregion
 
 
         private void Scroller_DirectManipulationStarted(object sender, object e)
         {
-            manipulating = true;
+            if (Scroller.VerticalOffset == 0)
+                manipulating = true;
         }
 
         private void Scroller_DirectManipulationCompleted(object sender, object e)
@@ -103,11 +141,32 @@ namespace Comet.Controls
             manipulating = false;
             RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
             ContentTransform.TranslateY = 0;
+
+            if (refreshActivated)
+            {
+                if (RefreshActivated != null)
+                    RefreshActivated(this, new EventArgs());
+                if (RefreshCommand != null && RefreshCommand.CanExecute(null))
+                    RefreshCommand.Execute(null);
+            }
+
+            refreshActivated = false;
+            lastRefreshActivation = default(DateTime);
+            IndicatorContent.Text = "Pull to refresh";
         }
+
+
+
+        
 
         private void CompositionTarget_Rendering(object sender, object e)
         {
-            if (!manipulating || Scroller.VerticalOffset > 0) return;
+            if (!manipulating) return;
+            //else if (Scroller.VerticalOffset > 0)
+            //{
+            //    manipulating = false;
+            //    return;
+            //}
             Rect elementBounds = ScrollerContent.TransformToVisual(Root).TransformBounds(new Rect());
 
             var offset = elementBounds.Y;
@@ -127,6 +186,27 @@ namespace Comet.Controls
                 RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
 
             }
+
+            if (pullDistance >= PullThreshold)
+            {
+                lastRefreshActivation = DateTime.Now;
+                refreshActivated = true;
+                IndicatorContent.Text = "Relese to refresh";
+            }
+            else if (lastRefreshActivation != DateTime.MinValue)
+            {
+                TimeSpan timeSinceActivated = DateTime.Now - lastRefreshActivation;
+                // if more then a second since activation, deactivate
+                if (timeSinceActivated.TotalMilliseconds > 1000)
+                {
+                    refreshActivated = false;
+                    lastRefreshActivation = default(DateTime);
+                    IndicatorContent.Text = "Pull to refresh";
+                }
+            }
+            
+
+            
         }
 
     }

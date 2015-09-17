@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,20 +24,26 @@ namespace Test.Tests
     /// </summary>
     public sealed partial class RefreshableListViewTest : Page
     {
-        List<Item> Items;
+        ObservableCollection<Item> Items;
         public RefreshableListViewTest()
         {
             this.InitializeComponent();
-            List<Item> items = new List<Item>();
+            Items = new ObservableCollection<Item>();
+            populateData();
+        }
 
-            for (var i = 0; i < 40; i++)
+        private void populateData()
+        {
+            Items.Clear();
+            for (int i = 0; i < 40; i++)
             {
-                items.Add(new Item() { Title = "Item " + i });
-
+                Items.Add(new Item() { Title = "Item " + new Random().Next(10000) });
             }
+        }
 
-
-            Items = items;
+        private void listView_RefreshCommand(object sender, EventArgs e)
+        {
+            populateData();
         }
     }
 }

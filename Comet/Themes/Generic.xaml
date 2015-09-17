@@ -98,7 +98,7 @@
                                       ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
                             <Grid x:Name="ScrollerContent">
                                 <Border x:Name="RefreshIndicator" VerticalAlignment="Top">
-                                    <ProgressRing HorizontalAlignment="Center" FontSize="20" IsActive="True"></ProgressRing>
+                                    <TextBlock x:Name="IndicatorContent" HorizontalAlignment="Center" FontSize="20">Pull to Refresh</TextBlock>
                                     <Border.RenderTransform>
                                         <CompositeTransform x:Name="RefreshIndicatorTransform"></CompositeTransform>
                                     </Border.RenderTransform>
