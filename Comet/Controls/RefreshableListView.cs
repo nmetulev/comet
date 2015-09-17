@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
@@ -16,18 +17,24 @@ namespace Comet.Controls
     public class RefreshableListView : ListView
     {
         private Border Root;
-        private Border RefreshIndicator;
+        private Border RefreshIndicatorBorder;
         private CompositeTransform RefreshIndicatorTransform;
         private ScrollViewer Scroller;
         private CompositeTransform ContentTransform;
         private Grid ScrollerContent;
 
-        public event EventHandler RefreshCommand;
+        private TextBlock DefaultIndicatorContent;
+
+        public event EventHandler RefreshActivated;
+        public event EventHandler<RefreshProgressEventArgs> PullProgressChanged;
 
         private double lastOffset = 0.0;
         private double pullDistance = 0.0;
 
         private bool manipulating = false;
+        DateTime lastRefreshActivation = default(DateTime);
+        bool refreshActivated = false;
+
 
         public RefreshableListView()
         {
@@ -55,11 +62,15 @@ namespace Comet.Controls
 
             ScrollerContent = GetTemplateChild("ScrollerContent") as Grid;
 
-            RefreshIndicator = GetTemplateChild("RefreshIndicator") as Border;
+            RefreshIndicatorBorder = GetTemplateChild("RefreshIndicator") as Border;
             RefreshIndicatorTransform = GetTemplateChild("RefreshIndicatorTransform") as CompositeTransform;
-            RefreshIndicator.SizeChanged += (s, e) =>
+
+            DefaultIndicatorContent = GetTemplateChild("DefaultIndicatorContent") as TextBlock;
+            DefaultIndicatorContent.Visibility = RefreshIndicatorContent == null ? Visibility.Visible : Visibility.Collapsed;
+
+            RefreshIndicatorBorder.SizeChanged += (s, e) =>
             {
-                RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+                RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             };
             
             CompositionTarget.Rendering += CompositionTarget_Rendering;
@@ -70,6 +81,7 @@ namespace Comet.Controls
         }
         
         #region dependencyProperties
+
         private double OverscrollMultiplier;
         public double OverscrollCoefficient
         {
@@ -86,28 +98,96 @@ namespace Comet.Controls
             }
         }
 
-        // Using a DependencyProperty as the backing store for OverscrollCoefficient.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OverscrollCoefficientProperty =
             DependencyProperty.Register("OverscrollCoefficient", typeof(double), typeof(RefreshableListView), new PropertyMetadata(0.5));
+
+
+
+        public double PullThreshold
+        {
+            get { return (double)GetValue(PullThresholdProperty); }
+            set { SetValue(PullThresholdProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PullThreshold.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PullThresholdProperty =
+            DependencyProperty.Register("PullThreshold", typeof(double), typeof(RefreshableListView), new PropertyMetadata(100.0));
+
+
+
+
+        public ICommand RefreshCommand
+        {
+            get { return (ICommand)GetValue(RefreshCommandProperty); }
+            set { SetValue(RefreshCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RefreshCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RefreshCommandProperty =
+            DependencyProperty.Register("RefreshCommand", typeof(ICommand), typeof(RefreshableListView), new PropertyMetadata(null));
+
+
+
+
+        public object RefreshIndicatorContent
+        {
+            get { return (object)GetValue(RefreshIndicatorContentProperty); }
+            set
+            {
+                if (DefaultIndicatorContent != null)
+                    DefaultIndicatorContent.Visibility = value == null ? Visibility.Visible : Visibility.Collapsed;
+                SetValue(RefreshIndicatorContentProperty, value);
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for RefreshIndicator.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RefreshIndicatorContentProperty =
+            DependencyProperty.Register("RefreshIndicatorContent", typeof(object), typeof(RefreshableListView), new PropertyMetadata(null));
+
+
 
         #endregion
 
 
         private void Scroller_DirectManipulationStarted(object sender, object e)
         {
-            manipulating = true;
+            if (Scroller.VerticalOffset == 0)
+                manipulating = true;
         }
 
         private void Scroller_DirectManipulationCompleted(object sender, object e)
         {
             manipulating = false;
-            RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+            RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             ContentTransform.TranslateY = 0;
+
+            if (refreshActivated)
+            {
+                if (RefreshActivated != null)
+                    RefreshActivated(this, new EventArgs());
+                if (RefreshCommand != null && RefreshCommand.CanExecute(null))
+                    RefreshCommand.Execute(null);
+            }
+
+            refreshActivated = false;
+            lastRefreshActivation = default(DateTime);
+
+            if (RefreshIndicatorContent == null)
+                DefaultIndicatorContent.Text = "Pull to Refresh";
         }
+
+
+
+        
 
         private void CompositionTarget_Rendering(object sender, object e)
         {
-            if (!manipulating || Scroller.VerticalOffset > 0) return;
+            if (!manipulating) return;
+            //else if (Scroller.VerticalOffset > 0)
+            //{
+            //    manipulating = false;
+            //    return;
+            //}
             Rect elementBounds = ScrollerContent.TransformToVisual(Root).TransformBounds(new Rect());
 
             var offset = elementBounds.Y;
@@ -119,16 +199,62 @@ namespace Comet.Controls
             if (pullDistance > 0)
             {
                 ContentTransform.TranslateY = pullDistance - offset;
-                RefreshIndicatorTransform.TranslateY = pullDistance - offset - RefreshIndicator.ActualHeight;
+                RefreshIndicatorTransform.TranslateY = pullDistance - offset - RefreshIndicatorBorder.ActualHeight;
             }
             else
             {
                 ContentTransform.TranslateY = 0;
-                RefreshIndicatorTransform.TranslateY = -RefreshIndicator.ActualHeight;
+                RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
 
             }
+
+            var pullProgress = 0.0;
+
+            if (pullDistance >= PullThreshold)
+            {
+                lastRefreshActivation = DateTime.Now;
+                refreshActivated = true;
+                pullProgress = 1.0;
+                if (RefreshIndicatorContent == null)
+                    DefaultIndicatorContent.Text = "Relese to Refresh";
+            }
+            else if (lastRefreshActivation != DateTime.MinValue)
+            {
+                TimeSpan timeSinceActivated = DateTime.Now - lastRefreshActivation;
+                // if more then a second since activation, deactivate
+                if (timeSinceActivated.TotalMilliseconds > 1000)
+                {
+                    refreshActivated = false;
+                    lastRefreshActivation = default(DateTime);
+                    pullProgress = pullDistance / PullThreshold;
+                    if (RefreshIndicatorContent == null)
+                        DefaultIndicatorContent.Text = "Pull to Refresh";
+                }
+                else
+                {
+                    pullProgress = 1.0;
+                }
+            }
+            else
+            {
+                pullProgress = pullDistance / PullThreshold;
+            }
+
+            if (PullProgressChanged != null)
+            {
+                PullProgressChanged(this, new RefreshProgressEventArgs() { PullProgress = pullProgress });
+            }
+            
         }
 
+    }
+
+    public class RefreshProgressEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Value from 0.0 to 1.0 where 1.0 is active
+        /// </summary>
+        public double PullProgress { get; set; }
     }
 
 
