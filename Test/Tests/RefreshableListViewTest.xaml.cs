@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Test.Data;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,20 +26,33 @@ namespace Test.Tests
     /// </summary>
     public sealed partial class RefreshableListViewTest : Page
     {
-        List<Item> Items;
+        ObservableCollection<Item> Items;
         public RefreshableListViewTest()
         {
             this.InitializeComponent();
-            List<Item> items = new List<Item>();
+            Items = new ObservableCollection<Item>();
+            populateData();
+        }
 
-            for (var i = 0; i < 40; i++)
+        private void populateData()
+        {
+            Items.Clear();
+            for (int i = 0; i < 40; i++)
             {
-                items.Add(new Item() { Title = "Item " + i });
-
+                Items.Add(new Item() { Title = "Item " + new Random().Next(10000) });
             }
+        }
 
+        private void listView_RefreshCommand(object sender, EventArgs e)
+        {
+            populateData();
+        }
 
-            Items = items;
+        private void listView_PullProgressChanged(object sender, Comet.Controls.RefreshProgressEventArgs e)
+        {
+            refreshindicator.Opacity = e.PullProgress;
+
+            refreshindicator.Background = e.PullProgress < 1.0 ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Blue);
         }
     }
 }
