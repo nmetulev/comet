@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace Comet.Controls
 {
-    public class RefreshableListView : ListView
+    public class PullToRefreshListView : ListView
     {
         private Border Root;
         private Border RefreshIndicatorBorder;
@@ -36,9 +36,9 @@ namespace Comet.Controls
         bool refreshActivated = false;
 
 
-        public RefreshableListView()
+        public PullToRefreshListView()
         {
-            DefaultStyleKey = typeof(RefreshableListView);
+            DefaultStyleKey = typeof(PullToRefreshListView);
             SizeChanged += RefreshableListView_SizeChanged;
         }
 
@@ -75,7 +75,7 @@ namespace Comet.Controls
             
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
-            OverscrollMultiplier = (OverscrollCoefficient * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+            OverscrollMultiplier = (OverscrollLimit * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 
             base.OnApplyTemplate();
         }
@@ -83,23 +83,24 @@ namespace Comet.Controls
         #region dependencyProperties
 
         private double OverscrollMultiplier;
-        public double OverscrollCoefficient
+
+        public double OverscrollLimit
         {
-            get { return (double)GetValue(OverscrollCoefficientProperty); }
+            get { return (double)GetValue(OverscrollLimitProperty); }
             set
             {
                 if (value >= 0 && value <= 1)
                 {
                     OverscrollMultiplier = (value * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
-                    SetValue(OverscrollCoefficientProperty, value);
+                    SetValue(OverscrollLimitProperty, value);
                 }
                 else
                     throw new IndexOutOfRangeException("OverscrollCoefficient has to be a double value between 0 and 1 inclusive.");
             }
         }
 
-        public static readonly DependencyProperty OverscrollCoefficientProperty =
-            DependencyProperty.Register("OverscrollCoefficient", typeof(double), typeof(RefreshableListView), new PropertyMetadata(0.5));
+        public static readonly DependencyProperty OverscrollLimitProperty =
+            DependencyProperty.Register("OverscrollLimit", typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(0.5));
 
 
 
@@ -111,7 +112,7 @@ namespace Comet.Controls
 
         // Using a DependencyProperty as the backing store for PullThreshold.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PullThresholdProperty =
-            DependencyProperty.Register("PullThreshold", typeof(double), typeof(RefreshableListView), new PropertyMetadata(100.0));
+            DependencyProperty.Register("PullThreshold", typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(100.0));
 
 
 
@@ -124,7 +125,7 @@ namespace Comet.Controls
 
         // Using a DependencyProperty as the backing store for RefreshCommand.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RefreshCommandProperty =
-            DependencyProperty.Register("RefreshCommand", typeof(ICommand), typeof(RefreshableListView), new PropertyMetadata(null));
+            DependencyProperty.Register("RefreshCommand", typeof(ICommand), typeof(PullToRefreshListView), new PropertyMetadata(null));
 
 
 
@@ -142,7 +143,7 @@ namespace Comet.Controls
 
         // Using a DependencyProperty as the backing store for RefreshIndicator.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RefreshIndicatorContentProperty =
-            DependencyProperty.Register("RefreshIndicatorContent", typeof(object), typeof(RefreshableListView), new PropertyMetadata(null));
+            DependencyProperty.Register("RefreshIndicatorContent", typeof(object), typeof(PullToRefreshListView), new PropertyMetadata(null));
 
 
 

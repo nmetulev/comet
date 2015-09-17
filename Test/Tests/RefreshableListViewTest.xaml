@@ -11,18 +11,19 @@
 
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <comet:RefreshableListView x:Name="listView"
+        <comet:PullToRefreshListView x:Name="listView"
                                    ItemsSource="{x:Bind Items}" 
                                    RefreshActivated="listView_RefreshCommand"
-                                   PullProgressChanged="listView_PullProgressChanged">
-            <comet:RefreshableListView.ItemTemplate>
+                                   PullProgressChanged="listView_PullProgressChanged"
+                                   >
+            <comet:PullToRefreshListView.ItemTemplate>
                 <DataTemplate  x:DataType="data:Item">
                     <TextBlock Text="{x:Bind Title}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"/>
                 </DataTemplate>
-            </comet:RefreshableListView.ItemTemplate>
-            <comet:RefreshableListView.RefreshIndicatorContent>
+            </comet:PullToRefreshListView.ItemTemplate>
+            <comet:PullToRefreshListView.RefreshIndicatorContent>
                 <Border HorizontalAlignment="Center" x:Name="refreshindicator" CornerRadius="30" Height="20" Width="20" ></Border>
-            </comet:RefreshableListView.RefreshIndicatorContent>
-        </comet:RefreshableListView>
+            </comet:PullToRefreshListView.RefreshIndicatorContent>
+        </comet:PullToRefreshListView>
     </Grid>
 </Page>
