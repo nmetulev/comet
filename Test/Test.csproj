@@ -106,11 +106,11 @@
     <Compile Include="Tests\RefreshableListViewTest.xaml.cs">
       <DependentUpon>RefreshableListViewTest.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tests\SlidableListItem.xaml.cs">
-      <DependentUpon>SlidableListItem.xaml</DependentUpon>
+    <Compile Include="Tests\SlidableListItemTest.xaml.cs">
+      <DependentUpon>SlidableListItemTest.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tests\UIElementToImage.xaml.cs">
-      <DependentUpon>UIElementToImage.xaml</DependentUpon>
+    <Compile Include="Tests\UIElementToImageTest.xaml.cs">
+      <DependentUpon>UIElementToImageTest.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -142,11 +142,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tests\SlidableListItem.xaml">
+    <Page Include="Tests\SlidableListItemTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tests\UIElementToImage.xaml">
+    <Page Include="Tests\UIElementToImageTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
