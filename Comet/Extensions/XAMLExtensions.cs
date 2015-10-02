@@ -71,8 +71,9 @@ namespace Comet.Extensions
         /// <param name="parent">The root of the Visual Tree</param>
         /// <returns>A list of elements of type T, or null</returns>
         public static IEnumerable<T> FindChildren<T>(this DependencyObject parent)
+            where T : DependencyObject
         {
-            return FindChildren<T>(parent);
+            return parent._FindChildren<T>();
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace Comet.Extensions
         /// <param name="parent">The root of the Visual Tree</param>
         /// <param name="list">a list to be used in the recusive calls</param>
         /// <returns>A list of elements of type T, or null</returns>
-        private static IEnumerable<T> _FindChildren<T>(DependencyObject parent, List<T> list = null)
+        private static IEnumerable<T> _FindChildren<T>(this DependencyObject parent, List<T> list = null)
                where T : DependencyObject
         {
             // Confirm parent and childName are valid. 
