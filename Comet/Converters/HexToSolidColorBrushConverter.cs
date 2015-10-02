@@ -47,7 +47,20 @@ namespace Comet.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            if (value is SolidColorBrush)
+            {
+                var color = value as SolidColorBrush;
+
+                return '#' +
+                       color.Color.A.ToString("X2") +
+                       color.Color.R.ToString("X2") +
+                       color.Color.G.ToString("X2") +
+                       color.Color.B.ToString("X2");
+            }
+            else
+            {
+                return "#FFFFFFFF";
+            }
         }
     }
 }

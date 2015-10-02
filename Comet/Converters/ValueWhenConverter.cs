@@ -21,7 +21,7 @@ namespace Comet.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            return value == Value ? When : null;
         }
 
         public object Value { get; set; }

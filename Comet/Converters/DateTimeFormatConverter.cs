@@ -23,7 +23,7 @@ namespace Comet.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            return value is string ? DateTime.Parse((String)value) : DateTime.MinValue;
         }
     }
 }
