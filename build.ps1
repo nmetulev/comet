@@ -1,0 +1,1 @@
+NuGet.exe restore Comet.sln -NonInteractive -Source https://api.nuget.org/v3/index.json
