@@ -1,1 +1,1 @@
-.Tools\nuget\nuget.exe restore Comet\build.sln -NonInteractive 
+.\Tools\nuget\nuget.exe restore Comet\build.sln -NonInteractive 
