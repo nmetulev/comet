@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Comet</id>
+    <version>0.1</version>
+    <title>Comet</title>
+    <authors>Nikola Metulev</authors>
+    <owners>Nikola Metulev</owners>
+    <licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
+    <projectUrl>http://metulev.com</projectUrl>
+    <iconUrl>http://i.imgur.com/XiZU9TE.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Controls for the Universal Windows Platform</description>
+    <language>en-US</language>
+    <releaseNotes><![CDATA[
+        First release of Comet
+	Includes:
+	* SlidableItem
+	* PullToRefreshListView 
+	]]></releaseNotes>
+    <tags>xaml uwp metro converters pull-to-refresh slidableitem pulltorefresh win10 windows10 controls</tags>
+    <dependencies>
+      <group targetFramework="uap10.0">
+        <dependency id="System.Collections" version="4.0.10" />
+        <dependency id="System.Diagnostics.Debug" version="4.0.10" />
+        <dependency id="System.Diagnostics.Tools" version="4.0.0" />
+        <dependency id="System.ObjectModel" version="4.0.10" />
+        <dependency id="System.Runtime" version="4.0.20" />
+        <dependency id="System.Runtime.Extensions" version="4.0.10" />
+        <dependency id="System.Runtime.InteropServices.WindowsRuntime" version="4.0.0" />
+        <dependency id="System.Runtime.WindowsRuntime" version="4.0.10" />
+        <dependency id="System.Runtime.WindowsRuntime.UI.Xaml" version="4.0.0" />
+        <dependency id="System.Threading" version="4.0.10" />
+        <dependency id="System.Threading.Tasks" version="4.0.10" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib\uap10.0\Comet\Themes\Generic.xbf" target="lib\uap10.0\Comet\Themes\Generic.xbf" />
+    <file src="lib\uap10.0\Comet\Properties\Comet.rd.xml" target="lib\uap10.0\Comet\Properties\Comet.rd.xml" />
+    <file src="lib\uap10.0\Comet\Comet.xr.xml" target="lib\uap10.0\Comet\Comet.xr.xml" />
+    <file src="lib\uap10.0\Comet.pri" target="lib\uap10.0\Comet.pri" />
+    <file src="lib\uap10.0\Comet.dll" target="lib\uap10.0\Comet.dll" />
+  </files>
+</package>

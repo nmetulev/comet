@@ -211,5 +211,9 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 
-
 !Test_TemporaryKey.pfx
+
+*.nuget.targets
+*.nuget.props
+
+Tools/nuget/Comet/lib/*
