@@ -75,7 +75,15 @@ namespace Comet.Controls
             
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
-            OverscrollMultiplier = (OverscrollLimit * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                OverscrollMultiplier = OverscrollLimit * 10;
+            } 
+            else
+            {
+                OverscrollMultiplier = (OverscrollLimit * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+            }
+
 
             base.OnApplyTemplate();
         }
@@ -91,7 +99,14 @@ namespace Comet.Controls
             {
                 if (value >= 0 && value <= 1)
                 {
-                    OverscrollMultiplier = (value * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+                    if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                    {
+                        OverscrollMultiplier = value * 10;
+                    }
+                    else
+                    {
+                        OverscrollMultiplier = (value * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+                    }
                     SetValue(OverscrollLimitProperty, value);
                 }
                 else
