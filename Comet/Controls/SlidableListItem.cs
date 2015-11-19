@@ -295,7 +295,7 @@ namespace Comet.Controls
 
             if (transform.TranslateX > 0)
             {
-                slider.Background = RightCommandBackground as SolidColorBrush;
+                slider.Background = LeftCommandBackground as SolidColorBrush;
 
                 leftCommandPanel.Opacity = 1;
                 rightCommandPanel.Opacity = 0;
@@ -307,7 +307,7 @@ namespace Comet.Controls
             }
             else
             {
-                slider.Background = LeftCommandBackground as SolidColorBrush;
+                slider.Background = RightCommandBackground as SolidColorBrush;
 
                 rightCommandPanel.Opacity = 1;
                 leftCommandPanel.Opacity = 0;

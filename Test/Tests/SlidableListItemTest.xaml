@@ -12,14 +12,15 @@
     <Page.Resources>
         <DataTemplate x:Key="EmailsItemTemplate" x:DataType="data:Item">
             <comet:SlidableListItem LeftIcon="Favorite" 
-                                    RightIcon="Accept" 
+                                    RightIcon="Delete" 
                                     LeftLabel="Set Favourite" 
-                                    RightLabel="This does nothing" 
+                                    RightLabel="Delete" 
                                     HorizontalAlignment="Stretch"
-                                    LeftCommandBackground="Aqua" 
-                                    RightCommandBackground="Purple"
+                                    LeftCommandBackground="Green" 
+                                    RightCommandBackground="Red"
                                     MouseSlidingEnabled="true"
-                                    LeftCommand="{x:Bind ToggleFavorite}">
+                                    LeftCommand="{x:Bind ToggleFavorite}"
+                                    RightCommandActivated="SlidableListItem_RightCommandActivated">
                 <Grid Height="110">
                     <StackPanel Grid.Column="1" Margin="10,0,0,0">
                         <CheckBox IsChecked="{x:Bind IsFavorite, Mode=OneWay}"></CheckBox>
@@ -31,7 +32,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
-        <ListView x:Name="listView" ItemTemplate="{StaticResource EmailsItemTemplate}" ItemsSource="{x:Bind Items}" SelectionMode="None" IsItemClickEnabled="False">
+        <ListView x:Name="listView" ItemTemplate="{StaticResource EmailsItemTemplate}" ItemsSource="{x:Bind Items, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>

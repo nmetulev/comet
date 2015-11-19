@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,12 +24,12 @@ namespace Test.Tests
     /// </summary>
     public sealed partial class SlidableListItem : Page
     {
-        List<Item> Items;
+        ObservableCollection<Item> Items;
 
         public SlidableListItem()
         {
             this.InitializeComponent();
-            List<Item> items = new List<Item>();
+            ObservableCollection<Item> items = new ObservableCollection<Item>();
 
             for (var i = 0; i<1000; i++)
             {
@@ -38,6 +39,11 @@ namespace Test.Tests
             
 
             Items = items;
+        }
+
+        private void SlidableListItem_RightCommandActivated(object sender, EventArgs e)
+        {
+            Items.Remove((sender as Comet.Controls.SlidableListItem).DataContext as Item);
         }
     }
 }
