@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Test.Data;
+using Sample.Data;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;

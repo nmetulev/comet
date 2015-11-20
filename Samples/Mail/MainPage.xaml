@@ -1,0 +1,136 @@
+﻿<Page
+    x:Class="CometMailSample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CometMailSample"
+    xmlns:comet="using:Comet.Controls"
+    xmlns:cometConverters="using:Comet.Converters"
+    xmlns:sample="using:Sample.Data"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <cometConverters:ValueWhenConverter x:Name="VisibleWhenFalseConverter">
+            <cometConverters:ValueWhenConverter.When>
+                <x:Boolean>true</x:Boolean>
+            </cometConverters:ValueWhenConverter.When>
+            <cometConverters:ValueWhenConverter.Value>
+                <Visibility>Collapsed</Visibility>
+            </cometConverters:ValueWhenConverter.Value>
+            <cometConverters:ValueWhenConverter.Otherwise>
+                <Visibility>Visible</Visibility>
+            </cometConverters:ValueWhenConverter.Otherwise>
+        </cometConverters:ValueWhenConverter>
+
+        <cometConverters:ValueWhenConverter x:Name="AccentColorWhenFalse">
+            <cometConverters:ValueWhenConverter.When>
+                <x:Boolean>true</x:Boolean>
+            </cometConverters:ValueWhenConverter.When>
+            <cometConverters:ValueWhenConverter.Value>
+                <SolidColorBrush>White</SolidColorBrush>
+            </cometConverters:ValueWhenConverter.Value>
+            <cometConverters:ValueWhenConverter.Otherwise>
+                <SolidColorBrush>Orange</SolidColorBrush>
+            </cometConverters:ValueWhenConverter.Otherwise>
+        </cometConverters:ValueWhenConverter>
+
+        <cometConverters:ValueWhenConverter x:Name="LeftCommandStringWhenTrue">
+            <cometConverters:ValueWhenConverter.When>
+                <x:Boolean>true</x:Boolean>
+            </cometConverters:ValueWhenConverter.When>
+            <cometConverters:ValueWhenConverter.Value>
+                <x:String>Mark as Read</x:String>
+            </cometConverters:ValueWhenConverter.Value>
+            <cometConverters:ValueWhenConverter.Otherwise>
+                <x:String>Mark as Unread</x:String>
+            </cometConverters:ValueWhenConverter.Otherwise>
+        </cometConverters:ValueWhenConverter>
+
+        <cometConverters:DateTimeFormatConverterNew x:Name="DateTimeConverter"></cometConverters:DateTimeFormatConverterNew>
+    </Page.Resources>
+
+    <Grid RequestedTheme="Dark" Background="#FF1A1A1A" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        
+        <Border BorderThickness="0,1" BorderBrush="Black">
+            <TextBlock VerticalAlignment="Center" Text="INBOX" FontWeight="Bold" Margin="20,0,0,0"></TextBlock>
+        </Border>
+
+        <ProgressBar x:Name="progress" VerticalAlignment="Bottom" IsIndeterminate="True" Visibility="Collapsed"></ProgressBar>
+        
+        <comet:PullToRefreshListView Grid.Row="1" 
+                                     x:Name="listView" 
+                                     Background="Black"
+                                     ItemsSource="{x:Bind Emails}" 
+                                     RefreshActivated="listView_RefreshActivated"
+                                     PullProgressChanged="listView_PullProgressChanged"
+                                        >
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="sample:Email">
+                    <comet:SlidableListItem Height="90"
+                                            LeftIcon="Mail"
+                                            LeftLabel="{x:Bind Read, Mode=OneWay, Converter={StaticResource LeftCommandStringWhenTrue}}"
+                                            LeftCommandBackground="{ThemeResource SystemAccentColor}"
+                                            LeftCommandForeground="White"
+                                            LeftCommand="{x:Bind ToggleRead}"
+                                            RightIcon="Delete"
+                                            RightLabel="Delete"
+                                            RightCommandBackground="Red"
+                                            RightCommandForeground="White"
+                                            RightCommandActivated="SlidableListItem_RightCommandActivated">
+                        <Grid Background="#FF1A1A1A">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="90"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Background="{ThemeResource SystemAccentColor}" Visibility="{x:Bind Read, Mode=OneWay, Converter={StaticResource VisibleWhenFalseConverter}}"></Border>
+
+                            <StackPanel Margin="10" Grid.Column="1">
+                                <TextBlock Text="{x:Bind From}" FontSize="21.333" Foreground="#FFE2E2E2"></TextBlock>
+                                <TextBlock Text="{x:Bind Subject}" Foreground="{x:Bind Read, Mode=OneWay, Converter={StaticResource AccentColorWhenFalse}}"></TextBlock>
+                                <TextBlock Text="{x:Bind Content}" Foreground="#FFAEAEAE" FontSize="13.333"></TextBlock>
+                            </StackPanel>
+
+                            <Grid Grid.Column="2" Margin="10">
+                                <TextBlock VerticalAlignment="Bottom" Text="{x:Bind Time, Converter={StaticResource DateTimeConverter}, ConverterParameter='hh:mm tt' }" FontSize="13.333"></TextBlock>
+                            </Grid>
+                        </Grid>
+                    </comet:SlidableListItem>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    <Setter Property="Margin" Value="0,1,0,1"></Setter>
+                    <Setter Property="Padding" Value="0"></Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            
+            <comet:PullToRefreshListView.RefreshIndicatorContent>
+                <Grid Height="60" Margin="5">
+                    <TextBlock x:Name="refreshText" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="Collapsed" Text="RELEASE TO REFRESH" Foreground="{ThemeResource SystemAccentColor}" FontSize="12"></TextBlock>
+                    <Canvas Height="35" Width="40" VerticalAlignment="Top">
+                        <Rectangle Canvas.Top="10" Height="25" Width="40" Stroke="#FFC1C1C1" StrokeThickness="2"></Rectangle>
+                        <Path Canvas.Top="10" Data="M 0,0 20,10 39,0" Stroke="#FFC1C1C1" StrokeThickness="1"/>
+                        <Path Canvas.Top="10" Data="M 0,0 20,20 39,0 0,0" Stroke="{ThemeResource SystemAccentColor}" StrokeThickness="1" Fill="#FF6C6C6C">
+                            <Path.Transform3D>
+                                <CompositeTransform3D x:Name="transform"></CompositeTransform3D>
+                            </Path.Transform3D>
+                        </Path>
+                        <Canvas.Transform3D>
+                            <PerspectiveTransform3D></PerspectiveTransform3D>
+                        </Canvas.Transform3D>
+                    </Canvas>
+                </Grid>
+            </comet:PullToRefreshListView.RefreshIndicatorContent>
+        </comet:PullToRefreshListView>
+    </Grid>
+</Page>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Test.Mvvm
+namespace Sample.Mvvm
 {
     // http://codepaste.net/jgxazh
     using System.Diagnostics;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Test.Mvvm;
+using Sample.Mvvm;
 
-namespace Test.Data
+namespace Sample.Data
 {
     public class Item: BindableBase
     {

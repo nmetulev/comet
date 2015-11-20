@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Test.Mvvm
+namespace Sample.Mvvm
 {
     public abstract class BindableBase : INotifyPropertyChanged
     {
