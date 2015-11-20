@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Comet</id>
-    <version>0.0.1-beta3</version>
+    <version>0.0.1-beta4</version>
     <title>Comet</title>
     <authors>Nikola Metulev</authors>
     <owners>Nikola Metulev</owners>
     <licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
     <projectUrl>http://metulev.com</projectUrl>
-    <iconUrl>http://i.imgur.com/XiZU9TE.png</iconUrl>
+    <iconUrl>http://i.imgur.com/VWx1FQw.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Controls for the Universal Windows Platform</description>
     <language>en-US</language>
