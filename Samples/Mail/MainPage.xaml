@@ -47,7 +47,7 @@
             </cometConverters:ValueWhenConverter.Otherwise>
         </cometConverters:ValueWhenConverter>
 
-        <cometConverters:DateTimeFormatConverterNew x:Name="DateTimeConverter"></cometConverters:DateTimeFormatConverterNew>
+        <cometConverters:DateTimeFormatConverter x:Name="DateTimeConverter"></cometConverters:DateTimeFormatConverter>
     </Page.Resources>
 
     <Grid RequestedTheme="Dark" Background="#FF1A1A1A" >
