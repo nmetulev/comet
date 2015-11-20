@@ -23,17 +23,7 @@
             </cometConverters:ValueWhenConverter.Otherwise>
         </cometConverters:ValueWhenConverter>
 
-        <cometConverters:ValueWhenConverter x:Name="AccentColorWhenFalse">
-            <cometConverters:ValueWhenConverter.When>
-                <x:Boolean>true</x:Boolean>
-            </cometConverters:ValueWhenConverter.When>
-            <cometConverters:ValueWhenConverter.Value>
-                <SolidColorBrush>White</SolidColorBrush>
-            </cometConverters:ValueWhenConverter.Value>
-            <cometConverters:ValueWhenConverter.Otherwise>
-                <SolidColorBrush>Orange</SolidColorBrush>
-            </cometConverters:ValueWhenConverter.Otherwise>
-        </cometConverters:ValueWhenConverter>
+        <local:BoolToAccentColorConverter x:Name="AccentColorWhenFalse"></local:BoolToAccentColorConverter>
 
         <cometConverters:ValueWhenConverter x:Name="LeftCommandStringWhenTrue">
             <cometConverters:ValueWhenConverter.When>
@@ -109,7 +99,7 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                    <Setter Property="Margin" Value="0,1,0,1"></Setter>
+                    <Setter Property="Margin" Value="0,0,0,0"></Setter>
                     <Setter Property="Padding" Value="0"></Setter>
                 </Style>
             </ListView.ItemContainerStyle>

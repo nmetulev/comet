@@ -93,7 +93,8 @@ namespace CometMailSample
 
         private void listView_PullProgressChanged(object sender, Comet.Controls.RefreshProgressEventArgs e)
         {
-            transform.RotationX = 180 * e.PullProgress;
+            if (e.PullProgress < 0.5) transform.RotationX = 0;
+            else transform.RotationX = 180 * ((e.PullProgress - 0.5) * 2);
 
             refreshText.Visibility = e.PullProgress < 1 ? Visibility.Collapsed : Visibility.Visible;
         }
