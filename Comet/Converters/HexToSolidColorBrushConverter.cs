@@ -9,7 +9,7 @@ namespace Comet.Converters
     /// <summary>
     /// Converts string conteining hex color of the form (#FFFFFFFF) to SolidColorBrush
     /// </summary>
-    class HexToSolidColorBrushConverter : IValueConverter
+    public class HexToSolidColorBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

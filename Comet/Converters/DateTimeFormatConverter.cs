@@ -10,15 +10,23 @@ namespace Comet.Converters
     /// <summary>
     /// Converter to convert DateTime to string with the specified format (parameter)
     /// </summary>
-    class DateTimeFormatConverter : IValueConverter
+    public class DateTimeFormatConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             try
             {
-                return System.Convert.ToDateTime(value).ToString(parameter.ToString());
+                if (parameter != null)
+                {
+                    return System.Convert.ToDateTime(value).ToString(parameter.ToString());
+                }
+                else
+                {
+                    return System.Convert.ToDateTime(value).ToString();
+                }
             }
-            catch { return value; }
+            // not a DateTime
+            catch { return "NaD"; }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
