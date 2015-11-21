@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="Controls\RefreshableListView.cs" />
     <Compile Include="Controls\SlidableListItem.cs" />
+    <Compile Include="Controls\SwipeableSplitView.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\HexToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\ValueWhenConverter.cs" />
@@ -123,7 +124,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\Comet.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>

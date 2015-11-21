@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="Test.Tests.SwipeableSplitViewTest"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Test.Tests"
+    xmlns:comet="using:Comet.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <comet:SwipeableSplitView IsPaneOpen="True" DisplayMode="Inline">
+            <SplitView.Pane>
+                <Grid>
+                    <TextBlock Text="Hola!"></TextBlock>
+                </Grid>
+            </SplitView.Pane>
+            <Grid>
+                <TextBlock Text="Come on make me swpipeable!"></TextBlock>
+            </Grid>
+        </comet:SwipeableSplitView>
+    </Grid>
+</Page>
