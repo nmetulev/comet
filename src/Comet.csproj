@@ -114,6 +114,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animations\Animation.cs" />
+    <Compile Include="Animations\AnimationHelpers.cs" />
     <Compile Include="Controls\RefreshableListView.cs" />
     <Compile Include="Controls\SlidableListItem.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
@@ -123,12 +125,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\Comet.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
