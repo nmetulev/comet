@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Comet.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -31,6 +33,12 @@ namespace Comet.Animations
         {
             _story.Stop();
             _story.Begin();
+        }
+
+        public Task GoAsync()
+        {
+            _story.Stop();
+            return _story.BeginAsync();
         }
 
 
