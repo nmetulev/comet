@@ -49,5 +49,20 @@ namespace Comet.Animations
             animation.AddOpacity(1);
             return animation;
         }
+
+
+        
+
+        // todo
+
+        // zoom in, zoom out, skew
+
+        // hide,show, toggle
+
+        // easing functions
+
+        // fadeto
+
+        // slidin, slideout (direction)
     }
 }
