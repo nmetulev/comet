@@ -1,0 +1,29 @@
+﻿<Page
+    x:Class="Test.Tests.BasicAnimationTest"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Test.Tests"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10">
+            
+            <ComboBox x:Name="effectSelection" Header="Effect" ItemsSource="{x:Bind Effects}" Width="300"></ComboBox>
+            <TextBox Header="Duration (ms)" Width="300" HorizontalAlignment="Left" ></TextBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+            <Button Margin="10"  Click="Go_Click">Go</Button>
+            <Button Margin="10" Click="Reset_Click">Reset</Button>
+        </StackPanel>
+
+        <Border x:Name="border" Height="100" Width="100" Background="Red" Grid.Row="2"></Border>
+    </Grid>
+</Page>

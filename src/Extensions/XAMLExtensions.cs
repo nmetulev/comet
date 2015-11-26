@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
@@ -77,32 +78,6 @@ namespace Comet.Extensions
             return parent._FindChildren<T>();
         }
 
-
-        /// <summary>
-        /// Begins a Storyboard animation and returns a task that completes when the 
-        /// animaton is complete
-        /// </summary>
-        /// <param name="storyboard">The storyoard to be started</param>
-        /// <returns>Task that completes when the animation is complete</returns>
-        public static Task BeginAsync(this Storyboard storyboard)
-        {
-            var taskSource = new TaskCompletionSource<object>();
-            EventHandler<object> completed = null;
-            completed += (s, e) =>
-            {
-                storyboard.Completed -= completed;
-                taskSource.SetResult(null);
-            };
-
-            storyboard.Completed += completed;
-            storyboard.Begin();
-
-            return taskSource.Task;
-        }
-
-
-
-
         /// <summary>
         /// A helper function for FindChildren
         /// Traverses the Visual Tree and returns a list of elements of type T
@@ -138,6 +113,69 @@ namespace Comet.Extensions
 
             return list;
         }
-        
+
+        /// <summary>
+        /// Begins a Storyboard animation and returns a task that completes when the 
+        /// animaton is complete
+        /// </summary>
+        /// <param name="storyboard">The storyoard to be started</param>
+        /// <returns>Task that completes when the animation is complete</returns>
+        public static Task BeginAsync(this Storyboard storyboard)
+        {
+            var taskSource = new TaskCompletionSource<object>();
+            EventHandler<object> completed = null;
+            completed += (s, e) =>
+            {
+                storyboard.Completed -= completed;
+                taskSource.SetResult(null);
+            };
+
+            storyboard.Completed += completed;
+            storyboard.Begin();
+
+            return taskSource.Task;
+        }
+
+        /// <summary>
+        /// Returns a Point that contains absolute X and Y coordinates relative
+        /// to current window. Note: if element is not part of the visual tree,
+        /// the result will be 0, 0
+        /// </summary>
+        /// <param name="element">Element to find absolute coordinates</param>
+        /// <returns>Point with absolute X and Y</returns>
+        public static Point GetAbsoluteCoordinates(this UIElement element)
+        {
+            return element.TransformToVisual(Window.Current.Content)
+                             .TransformPoint(new Point(0, 0));
+        }
+
+        /// <summary>
+        /// Changes Visibility of element to Collapsed
+        /// </summary>
+        /// <param name="element">Element to hide</param>
+        public static void Hide(this UIElement element)
+        {
+            element.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Changes Visibility of element to Visible
+        /// </summary>
+        /// <param name="element">Element to show</param>
+        public static void Show(this UIElement element)
+        {
+            element.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Changes Visibility of element to Collapsed or Visible depending on the
+        /// current state
+        /// </summary>
+        /// <param name="element">Element to toggle visibility</param>
+        public static void ToggleVisibility(this UIElement element)
+        {
+            element.Visibility = element.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
     }
 }
