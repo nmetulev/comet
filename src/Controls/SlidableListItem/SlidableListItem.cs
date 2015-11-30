@@ -14,230 +14,72 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace Comet.Controls
 {
-    public sealed class SlidableListItem : ContentControl
+    /// <summary>
+    /// ContentControl prividing functinality for sliding left or right to expose functions
+    /// </summary>
+    [TemplatePart(Name = PART_CONTENT_GRID, Type = typeof(Grid))]
+    [TemplatePart(Name = PART_COMMAND_CONTAINER, Type = typeof(Grid))]
+    [TemplatePart(Name = PART_LEFT_COMMAND_PANEL, Type = typeof(StackPanel))]
+    [TemplatePart(Name = PART_RIGHT_COMMAND_PANEL, Type = typeof(StackPanel))]
+    public class SlidableListItem : ContentControl
     {
+        #region Private Variables
+        // Content Container
         private Grid contentGrid;
+        // transform for sliding content
         private CompositeTransform transform;
-        private Grid slider;
-
+        // container for command content
+        private Grid commandContainer;
+        // container for left command content
         private StackPanel leftCommandPanel;
+        // transform for left command content
         private CompositeTransform leftCommandTransform;
+        // container for right command content
         private StackPanel rightCommandPanel;
+        // transform for right command content
         private CompositeTransform rightCommandTransform;
-
+        // doubleanimation for snaping back to default position
         private DoubleAnimation contentAnimation;
+        // storyboard for snaping back to default position
         private Storyboard contentStoryboard;
+        // event handler when right command has been requested
+        public event EventHandler RightCommandRequested;
+        // event handler when left command has been requested
+        public event EventHandler LeftCommandRequested;
+        #endregion
 
-        public event EventHandler RightCommandActivated;
-        public event EventHandler LeftCommandActivated;
-        
+        const string PART_CONTENT_GRID = "ContentGrid";
+        const string PART_COMMAND_CONTAINER = "CommandContainer";
+        const string PART_LEFT_COMMAND_PANEL = "LeftCommandPanel";
+        const string PART_RIGHT_COMMAND_PANEL = "RightCommandPanel";
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SlidableListItem"/>
+        /// </summary>
         public SlidableListItem()
         {
             this.DefaultStyleKey = typeof(SlidableListItem);
         }
 
+        #region Methods and Events
+        /// <summary>
+        /// Invoked whenever application code or internal processes (such as a rebuilding
+        /// layout pass) call <see cref="OnApplyTemplate"/>. In simplest terms, this means the method
+        /// is called just before a UI element displays in an application. Override this
+        /// method to influence the default post-template logic of a class.
+        /// </summary>
         protected override void OnApplyTemplate()
         {
-            contentGrid = this.GetTemplateChild("ContentGrid") as Grid;
-            transform = contentGrid.RenderTransform as CompositeTransform;
-            slider = this.GetTemplateChild("Slider") as Grid;
+            contentGrid = this.GetTemplateChild(PART_CONTENT_GRID) as Grid;
+            commandContainer = this.GetTemplateChild(PART_COMMAND_CONTAINER) as Grid;
+            leftCommandPanel = this.GetTemplateChild(PART_LEFT_COMMAND_PANEL) as StackPanel;
+            rightCommandPanel = this.GetTemplateChild(PART_RIGHT_COMMAND_PANEL) as StackPanel;
 
-            leftCommandPanel = this.GetTemplateChild("leftCommandPanel") as StackPanel;
+            transform = contentGrid.RenderTransform as CompositeTransform;
+
             leftCommandTransform = leftCommandPanel.RenderTransform as CompositeTransform;
-            rightCommandPanel = this.GetTemplateChild("rightCommandPanel") as StackPanel;
             rightCommandTransform = rightCommandPanel.RenderTransform as CompositeTransform;
 
-            Setup();
-            base.OnApplyTemplate();
-        }
-
-
-
-        public double ActivationWidth
-        {
-            get { return (double)GetValue(ActivationWidthProperty); }
-            set { SetValue(ActivationWidthProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for ActivationWidth.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ActivationWidthProperty =
-            DependencyProperty.Register("ActivationWidth", typeof(double), typeof(SlidableListItem), new PropertyMetadata(200));
-
-
-
-
-        public Symbol LeftIcon
-        {
-            get { return (Symbol)GetValue(LeftIconProperty); }
-            set { SetValue(LeftIconProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for LeftIcon.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LeftIconProperty =
-            DependencyProperty.Register("LeftIcon", typeof(Symbol), typeof(SlidableListItem), new PropertyMetadata(Symbol.Favorite, new PropertyChangedCallback(OnLeftIconChanged)));
-
-        private static void OnLeftIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
-
-        public Symbol RightIcon
-        {
-            get { return (Symbol)GetValue(RightIconProperty); }
-            set { SetValue(RightIconProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for LeftIcon.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RightIconProperty =
-            DependencyProperty.Register("RightIcon", typeof(Symbol), typeof(SlidableListItem), new PropertyMetadata(Symbol.Delete, new PropertyChangedCallback(OnRightIconChanged)));
-
-        private static void OnRightIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
-
-
-
-        public string LeftLabel
-        {
-            get { return (string)GetValue(LeftLabelProperty); }
-            set { SetValue(LeftLabelProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for LeftLabel.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LeftLabelProperty =
-            DependencyProperty.Register("LeftLabel", typeof(string), typeof(SlidableListItem), new PropertyMetadata("", new PropertyChangedCallback(OnLeftLabelChanged)));
-
-        private static void OnLeftLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
-
-        public string RightLabel
-        {
-            get { return (string)GetValue(RightLabelProperty); }
-            set { SetValue(RightLabelProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for RightLabel.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RightLabelProperty =
-            DependencyProperty.Register("RightLabel", typeof(string), typeof(SlidableListItem), new PropertyMetadata("", new PropertyChangedCallback(OnRightLabelChanged)));
-
-        private static void OnRightLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
-
-
-
-        public Brush LeftCommandForeground
-        {
-            get { return (Brush)GetValue(LeftCommandForegroundProperty); }
-            set { SetValue(LeftCommandForegroundProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for CommandForeground.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LeftCommandForegroundProperty =
-            DependencyProperty.Register("LeftCommandForeground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.White)));
-
-        public Brush RightCommandForeground
-        {
-            get { return (Brush)GetValue(RightCommandForegroundProperty); }
-            set { SetValue(RightCommandForegroundProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for CommandForeground.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RightCommandForegroundProperty =
-            DependencyProperty.Register("RightCommandForeground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.White)));
-
-
-
-        public Brush LeftCommandBackground
-        {
-            get { return (Brush)GetValue(LeftCommandBackgroundProperty); }
-            set { SetValue(LeftCommandBackgroundProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for LeftCommandForeground.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LeftCommandBackgroundProperty =
-            DependencyProperty.Register("LeftCommandBackground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.LightGray)));
-
-        public Brush RightCommandBackground
-        {
-            get { return (Brush)GetValue(RightCommandBackgroundProperty); }
-            set { SetValue(RightCommandBackgroundProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for RightCommandForeground.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RightCommandBackgroundProperty =
-            DependencyProperty.Register("RightCommandBackground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.DarkGray)));
-
-
-
-
-        public bool MouseSlidingEnabled
-        {
-            get { return (bool)GetValue(MouseSlidingEnabledProperty); }
-            set { SetValue(MouseSlidingEnabledProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for MouseSlidingEnabled.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MouseSlidingEnabledProperty =
-            DependencyProperty.Register("MouseSlidingEnabled", typeof(bool), typeof(SlidableListItem), new PropertyMetadata(false));
-
-
-
-        public ICommand LeftCommand
-        {
-            get { return (ICommand)GetValue(LeftCommandProperty); }
-            set
-            {
-                if (value != null)
-                {
-                    value.CanExecuteChanged += LeftCommand_CanExecuteChanged;
-                }
-                SetValue(LeftCommandProperty, value);
-            }
-        }
-
-        private void LeftCommand_CanExecuteChanged(object sender, EventArgs e)
-        {
-            Debug.WriteLine("LeftCommand");
-        }
-
-        // Using a DependencyProperty as the backing store for LeftCommand.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty LeftCommandProperty =
-            DependencyProperty.Register("LeftCommand", typeof(ICommand), typeof(SlidableListItem), new PropertyMetadata(null));
-
-
-
-
-        public ICommand RightCommand
-        {
-            get { return (ICommand)GetValue(RightCommandProperty); }
-            set
-            {
-                if (value != null)
-                {
-                    value.CanExecuteChanged += RightCommand_CanExecuteChanged;
-                }
-                SetValue(RightCommandProperty, value);
-            }
-        }
-
-        private void RightCommand_CanExecuteChanged(object sender, EventArgs e)
-        {
-            Debug.WriteLine("RightCommand");
-        }
-
-        // Using a DependencyProperty as the backing store for RightCommand.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RightCommandProperty =
-            DependencyProperty.Register("RightCommand", typeof(ICommand), typeof(SlidableListItem), new PropertyMetadata(null));
-
-
-
-
-
-        private void Setup()
-        {
-            contentGrid.ManipulationStarted += ContentGrid_ManipulationStarted;
             contentGrid.ManipulationDelta += ContentGrid_ManipulationDelta;
             contentGrid.ManipulationCompleted += ContentGrid_ManipulationCompleted;
 
@@ -250,10 +92,14 @@ namespace Comet.Controls
             contentStoryboard = new Storyboard();
             contentStoryboard.Children.Add(contentAnimation);
 
-            slider.Background = LeftCommandBackground as SolidColorBrush;
+            commandContainer.Background = LeftBackground as SolidColorBrush;
 
+            base.OnApplyTemplate();
         }
 
+        /// <summary>
+        /// Handler for when slide manipulation is complete
+        /// </summary>
         private void ContentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             if (!MouseSlidingEnabled && e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
@@ -270,20 +116,23 @@ namespace Comet.Controls
 
             if (x < -ActivationWidth)
             {
-                if (RightCommandActivated != null)
-                    RightCommandActivated(this, new EventArgs());
+                if (RightCommandRequested != null)
+                    RightCommandRequested(this, new EventArgs());
                 if (RightCommand != null)
                     RightCommand.Execute(null);
             }
             else if (x > ActivationWidth)
             {
-                if (LeftCommandActivated != null)
-                    LeftCommandActivated(this, new EventArgs());
+                if (LeftCommandRequested != null)
+                    LeftCommandRequested(this, new EventArgs());
                 if (LeftCommand != null)
                     LeftCommand.Execute(null);
             }
         }
 
+        /// <summary>
+        /// Handler for when slide manipulation is underway
+        /// </summary>
         private void ContentGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
 
@@ -295,7 +144,7 @@ namespace Comet.Controls
 
             if (transform.TranslateX > 0)
             {
-                slider.Background = LeftCommandBackground as SolidColorBrush;
+                commandContainer.Background = LeftBackground as SolidColorBrush;
 
                 leftCommandPanel.Opacity = 1;
                 rightCommandPanel.Opacity = 0;
@@ -307,7 +156,7 @@ namespace Comet.Controls
             }
             else
             {
-                slider.Background = RightCommandBackground as SolidColorBrush;
+                commandContainer.Background = RightBackground as SolidColorBrush;
 
                 rightCommandPanel.Opacity = 1;
                 leftCommandPanel.Opacity = 0;
@@ -319,10 +168,204 @@ namespace Comet.Controls
             }
 
         }
+        #endregion
 
-        private void ContentGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        #region Dependency Properties
+
+        /// <summary>
+        /// Gets or sets the Activation Width
+        /// </summary>
+        public double ActivationWidth
         {
-            
+            get { return (double)GetValue(ActivationWidthProperty); }
+            set { SetValue(ActivationWidthProperty, value); }
         }
+
+        /// <summary>
+        /// Indetifies the <see cref="ActivationWidth"/> property
+        /// </summary>
+        public static readonly DependencyProperty ActivationWidthProperty =
+            DependencyProperty.Register("ActivationWidth", typeof(double), typeof(SlidableListItem), new PropertyMetadata(80));
+
+        /// <summary>
+        /// Gets or sets the left icon symbol
+        /// </summary>
+        public Symbol LeftIcon
+        {
+            get { return (Symbol)GetValue(LeftIconProperty); }
+            set { SetValue(LeftIconProperty, value); }
+        }
+
+        /// <summary>
+        /// Indeifies the <see cref="LeftIcon"/> property
+        /// </summary>
+        public static readonly DependencyProperty LeftIconProperty =
+            DependencyProperty.Register("LeftIcon", typeof(Symbol), typeof(SlidableListItem), new PropertyMetadata(Symbol.Favorite));
+        
+        /// <summary>
+        /// Gets or sets the right icon symbol
+        /// </summary>
+        public Symbol RightIcon
+        {
+            get { return (Symbol)GetValue(RightIconProperty); }
+            set { SetValue(RightIconProperty, value); }
+        }
+
+        /// <summary>
+        /// Indetifies the <see cref="RightIcon"/> property
+        /// </summary>
+        public static readonly DependencyProperty RightIconProperty =
+            DependencyProperty.Register("RightIcon", typeof(Symbol), typeof(SlidableListItem), new PropertyMetadata(Symbol.Delete));
+
+        /// <summary>
+        /// Gets or sets the left label
+        /// </summary>
+        public string LeftLabel
+        {
+            get { return (string)GetValue(LeftLabelProperty); }
+            set { SetValue(LeftLabelProperty, value); }
+        }
+
+        /// <summary>
+        /// Indetifies the <see cref="LeftLabel"/> property
+        /// </summary>
+        public static readonly DependencyProperty LeftLabelProperty =
+            DependencyProperty.Register("LeftLabel", typeof(string), typeof(SlidableListItem), new PropertyMetadata(""));
+        
+        /// <summary>
+        /// Gets or sets the right label
+        /// </summary>
+        public string RightLabel
+        {
+            get { return (string)GetValue(RightLabelProperty); }
+            set { SetValue(RightLabelProperty, value); }
+        }
+
+        /// <summary>
+        /// Indetifies the <see cref="RightLabel"/> property
+        /// </summary>
+        public static readonly DependencyProperty RightLabelProperty =
+            DependencyProperty.Register("RightLabel", typeof(string), typeof(SlidableListItem), new PropertyMetadata(""));
+        
+        /// <summary>
+        /// Gets or sets the left foreground color
+        /// </summary>
+        public Brush LeftForeground
+        {
+            get { return (Brush)GetValue(LeftForegroundProperty); }
+            set { SetValue(LeftForegroundProperty, value); }
+        }
+
+        /// <summary>
+        /// Indetifies the <see cref="LeftForeground"/> property
+        /// </summary>
+        public static readonly DependencyProperty LeftForegroundProperty =
+            DependencyProperty.Register("LeftForeground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.White)));
+
+        /// <summary>
+        /// Gets or sets the right foreground color
+        /// </summary>
+        public Brush RightForeground
+        {
+            get { return (Brush)GetValue(RightForegroundProperty); }
+            set { SetValue(RightForegroundProperty, value); }
+        }
+
+        /// <summary>
+        /// Indetifies the <see cref="RightForeground"/> property
+        /// </summary>
+        public static readonly DependencyProperty RightForegroundProperty =
+            DependencyProperty.Register("RightForeground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.White)));
+
+        /// <summary>
+        /// Gets or sets the left background color
+        /// </summary>
+        public Brush LeftBackground
+        {
+            get { return (Brush)GetValue(LeftBackgroundProperty); }
+            set { SetValue(LeftBackgroundProperty, value); }
+        }
+
+        /// <summary>
+        /// Indetifies the <see cref="LeftBackground"/> property
+        /// </summary>
+        public static readonly DependencyProperty LeftBackgroundProperty =
+            DependencyProperty.Register("LeftBackground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.LightGray)));
+
+        /// <summary>
+        /// Gets or sets the right background color
+        /// </summary>
+        public Brush RightBackground
+        {
+            get { return (Brush)GetValue(RightBackgroundProperty); }
+            set { SetValue(RightBackgroundProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="RightBackground"/> property
+        /// </summary>
+        public static readonly DependencyProperty RightBackgroundProperty =
+            DependencyProperty.Register("RightBackground", typeof(Brush), typeof(SlidableListItem), new PropertyMetadata(new SolidColorBrush(Colors.DarkGray)));
+
+        /// <summary>
+        /// Gets or sets the ability to slide the control with the mouse. False by default
+        /// </summary>
+        public bool MouseSlidingEnabled
+        {
+            get { return (bool)GetValue(MouseSlidingEnabledProperty); }
+            set { SetValue(MouseSlidingEnabledProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="MouseSlidingEnabled"/> property
+        /// </summary>
+        public static readonly DependencyProperty MouseSlidingEnabledProperty =
+            DependencyProperty.Register("MouseSlidingEnabled", typeof(bool), typeof(SlidableListItem), new PropertyMetadata(false));
+
+        /// <summary>
+        /// Gets or sets the ICommand for left command request
+        /// </summary>
+        public ICommand LeftCommand
+        {
+            get { return (ICommand)GetValue(LeftCommandProperty); }
+            set
+            {
+                //if (value != null)
+                //{
+                //    value.CanExecuteChanged += LeftCommand_CanExecuteChanged;
+                //}
+                SetValue(LeftCommandProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="LeftCommand"/> property
+        /// </summary>
+        public static readonly DependencyProperty LeftCommandProperty =
+            DependencyProperty.Register("LeftCommand", typeof(ICommand), typeof(SlidableListItem), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Gets or sets the ICommand for right command request
+        /// </summary>
+        public ICommand RightCommand
+        {
+            get { return (ICommand)GetValue(RightCommandProperty); }
+            set
+            {
+                //if (value != null)
+                //{
+                //    value.CanExecuteChanged += RightCommand_CanExecuteChanged;
+                //}
+                SetValue(RightCommandProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="RightCommand"/> property
+        /// </summary>
+        public static readonly DependencyProperty RightCommandProperty =
+            DependencyProperty.Register("RightCommand", typeof(ICommand), typeof(SlidableListItem), new PropertyMetadata(null));
+
+        #endregion
     }
 }

@@ -65,14 +65,14 @@
                     <c:SlidableListItem Height="90"
                                             LeftIcon="Mail"
                                             LeftLabel="{x:Bind Read, Mode=OneWay, Converter={StaticResource LeftCommandStringWhenTrue}}"
-                                            LeftCommandBackground="{ThemeResource SystemAccentColor}"
-                                            LeftCommandForeground="White"
+                                            LeftBackground="{ThemeResource SystemAccentColor}"
+                                            LeftForeground="White"
                                             LeftCommand="{x:Bind ToggleRead}"
                                             RightIcon="Delete"
                                             RightLabel="Delete"
-                                            RightCommandBackground="Red"
-                                            RightCommandForeground="White"
-                                            RightCommandActivated="SlidableListItem_RightCommandActivated">
+                                            RightBackground="Red"
+                                            RightForeground="White"
+                                            RightCommandRequested="SlidableListItem_RightCommandActivated">
                         <Grid Background="#FF1A1A1A">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="10"></ColumnDefinition>

@@ -16,11 +16,11 @@
                                     LeftLabel="Set Favourite" 
                                     RightLabel="Delete" 
                                     HorizontalAlignment="Stretch"
-                                    LeftCommandBackground="Green" 
-                                    RightCommandBackground="Red"
+                                    LeftBackground="Green" 
+                                    RightBackground="Red"
                                     MouseSlidingEnabled="true"
                                     LeftCommand="{x:Bind ToggleFavorite}"
-                                    RightCommandActivated="SlidableListItem_RightCommandActivated">
+                                    RightCommandRequested="SlidableListItem_RightCommandActivated">
                 <Grid Height="110">
                     <StackPanel Grid.Column="1" Margin="10,0,0,0">
                         <CheckBox IsChecked="{x:Bind IsFavorite, Mode=OneWay}"></CheckBox>
