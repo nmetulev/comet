@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Test.Tests"
-    xmlns:comet="using:Comet.Controls"
+    xmlns:c="using:Comet.Controls"
     xmlns:data="using:Sample.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,7 +11,7 @@
 
     <Page.Resources>
         <DataTemplate x:Key="EmailsItemTemplate" x:DataType="data:Item">
-            <comet:SlidableListItem LeftIcon="Favorite" 
+            <c:SlidableListItem LeftIcon="Favorite" 
                                     RightIcon="Delete" 
                                     LeftLabel="Set Favourite" 
                                     RightLabel="Delete" 
@@ -27,7 +27,7 @@
                         <TextBlock Text="{x:Bind Title}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"/>
                     </StackPanel>
                 </Grid>
-            </comet:SlidableListItem>
+            </c:SlidableListItem>
         </DataTemplate>
     </Page.Resources>
 
