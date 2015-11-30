@@ -72,8 +72,9 @@
                                             RightLabel="Delete"
                                             RightBackground="Red"
                                             RightForeground="White"
-                                            RightCommandRequested="SlidableListItem_RightCommandActivated">
-                        <Grid Background="#FF1A1A1A">
+                                            RightCommandRequested="SlidableListItem_RightCommandActivated"
+                                            Background="#FF1A1A1A">
+                        <Grid >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="10"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -99,7 +100,7 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                    <Setter Property="Margin" Value="0,0,0,0"></Setter>
+                    <Setter Property="Margin" Value="0,0,0,2"></Setter>
                     <Setter Property="Padding" Value="0"></Setter>
                 </Style>
             </ListView.ItemContainerStyle>
