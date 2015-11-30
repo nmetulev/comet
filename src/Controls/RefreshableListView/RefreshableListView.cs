@@ -17,6 +17,13 @@ namespace Comet.Controls
     /// <summary>
     /// Extension of ListView that allows "Pull To Refresh" on touch devices
     /// </summary>
+    [TemplatePart(Name = PART_ROOT, Type = typeof(Border))]
+    [TemplatePart(Name = PART_SCROLLER, Type = typeof(ScrollViewer))]
+    [TemplatePart(Name = PART_CONTENT_TRANSFORM, Type = typeof(CompositeTransform))]
+    [TemplatePart(Name = PART_SCROLLER_CONTENT, Type = typeof(Grid))]
+    [TemplatePart(Name = PART_REFRESH_INDICATOR_BORDER, Type = typeof(Border))]
+    [TemplatePart(Name = PART_INDICATOR_TRANSFORM, Type = typeof(CompositeTransform))]
+    [TemplatePart(Name = PART_DEFAULT_INDICATOR_CONTENT, Type = typeof(TextBlock))]
     public class PullToRefreshListView : ListView
     {
         #region Private Variables
@@ -52,6 +59,14 @@ namespace Comet.Controls
         private double OverscrollMultiplier;
         #endregion
 
+        const string PART_ROOT = "Root";
+        const string PART_SCROLLER = "ScrollViewer";
+        const string PART_CONTENT_TRANSFORM = "ContentTransform";
+        const string PART_SCROLLER_CONTENT = "ScrollerContent";
+        const string PART_REFRESH_INDICATOR_BORDER = "RefreshIndicator";
+        const string PART_INDICATOR_TRANSFORM = "RefreshIndicatorTransform";
+        const string PART_DEFAULT_INDICATOR_CONTENT = "DefaultIndicatorContent";
+
         /// <summary>
         /// Creates a new instance of <see cref="PullToRefreshListView"/>
         /// </summary>
@@ -81,20 +96,17 @@ namespace Comet.Controls
 		/// </summary>
         protected override void OnApplyTemplate()
         {
-            Root = GetTemplateChild("Root") as Border;
+            Root = GetTemplateChild(PART_ROOT) as Border;
+            Scroller = this.GetTemplateChild(PART_SCROLLER) as ScrollViewer;
+            ContentTransform = GetTemplateChild(PART_CONTENT_TRANSFORM) as CompositeTransform;
+            ScrollerContent = GetTemplateChild(PART_SCROLLER_CONTENT) as Grid;
+            RefreshIndicatorBorder = GetTemplateChild(PART_REFRESH_INDICATOR_BORDER) as Border;
+            RefreshIndicatorTransform = GetTemplateChild(PART_INDICATOR_TRANSFORM) as CompositeTransform;
+            DefaultIndicatorContent = GetTemplateChild(PART_DEFAULT_INDICATOR_CONTENT) as TextBlock;
 
-            Scroller = this.GetTemplateChild("ScrollViewer") as ScrollViewer;
             Scroller.DirectManipulationCompleted += Scroller_DirectManipulationCompleted;
             Scroller.DirectManipulationStarted += Scroller_DirectManipulationStarted;
 
-            ContentTransform = GetTemplateChild("ContentTransform") as CompositeTransform;
-
-            ScrollerContent = GetTemplateChild("ScrollerContent") as Grid;
-
-            RefreshIndicatorBorder = GetTemplateChild("RefreshIndicator") as Border;
-            RefreshIndicatorTransform = GetTemplateChild("RefreshIndicatorTransform") as CompositeTransform;
-
-            DefaultIndicatorContent = GetTemplateChild("DefaultIndicatorContent") as TextBlock;
             DefaultIndicatorContent.Visibility = RefreshIndicatorContent == null ? Visibility.Visible : Visibility.Collapsed;
 
             RefreshIndicatorBorder.SizeChanged += (s, e) =>
