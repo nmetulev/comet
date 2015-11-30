@@ -115,7 +115,7 @@ namespace Comet.Controls
         }
 
         public static readonly DependencyProperty OverscrollLimitProperty =
-            DependencyProperty.Register("OverscrollLimit", typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(0.5));
+            DependencyProperty.Register("OverscrollLimit", typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(0.3));
 
 
 
@@ -167,7 +167,8 @@ namespace Comet.Controls
 
         private void Scroller_DirectManipulationStarted(object sender, object e)
         {
-            if (Scroller.VerticalOffset == 0)
+            // sometimes the value gets stuck at 0.something, so checking if less than 1
+            if (Scroller.VerticalOffset < 1)
                 manipulating = true;
         }
 
@@ -190,6 +191,11 @@ namespace Comet.Controls
 
             if (RefreshIndicatorContent == null)
                 DefaultIndicatorContent.Text = "Pull to Refresh";
+
+            if (PullProgressChanged != null)
+            {
+                PullProgressChanged(this, new RefreshProgressEventArgs() { PullProgress = 0 });
+            }
         }
 
 
