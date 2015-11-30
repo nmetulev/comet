@@ -52,10 +52,10 @@ namespace Test.Tests
             switch(effect)
             {
                 case "SlideIn":
-                    border.SlideIn();
+                    border.SlideIn(direction: Direction.Right, easing: Easing.BounceEaseOut, duration: 1000);
                     break;
                 case "SlideOut":
-                    border.SlideOut();
+                    border.SlideOut(Easing.BounceEaseIn);
                     break;
                 case "FadeIn":
                     border.FadeIn().Go();

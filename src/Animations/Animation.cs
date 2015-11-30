@@ -42,7 +42,7 @@ namespace Comet.Animations
         }
 
 
-        private DoubleAnimation AddOrUpdateDoubleAnimation(string key, double To, double duration)
+        private DoubleAnimation AddOrUpdateDoubleAnimation(string key, double to, double duration, EasingFunctionBase easingFunction = null)
         {
             DoubleAnimation anim;
             if (_timelines.ContainsKey(key))
@@ -59,51 +59,69 @@ namespace Comet.Animations
                 _timelines[key] = anim;
             }
 
-            anim.To = To;
+            anim.To = to;
             anim.Duration = TimeSpan.FromMilliseconds(duration);
+            if (easingFunction != null) anim.EasingFunction = easingFunction;
             Storyboard.SetTarget(anim, _element);
 
             return anim;
         }
 
-        private DoubleAnimation AddOrUpdateDoubleAnimation(string key, double From, double To, double duration)
+        private DoubleAnimation AddOrUpdateDoubleAnimation(string key, double from, double to, double duration, EasingFunctionBase easingFunction = null)
         {
-            DoubleAnimation anim = AddOrUpdateDoubleAnimation(key, To, duration);
-            anim.From = From;
+            DoubleAnimation anim = AddOrUpdateDoubleAnimation(key, to, duration, easingFunction);
+            anim.From = from;
+                        
             return anim;
         }
 
-        public void AddTranslationX(double To)
+        //public void AddTranslationX(double To)
+        //{
+        //    AddTranslationX(To, _defaultDuration);
+        //}
+
+        //public void AddTranslationX(double To, double Duration)
+        //{
+        //    double from = 0;
+        //    if (_element.RenderTransform is CompositeTransform)
+        //        from = (_element.RenderTransform as CompositeTransform).TranslateX;
+        //    AddTranslationX(from, To, Duration);
+        //}
+
+        //private void AddTranslationX(double From, double To, double Duration)
+        //{
+        //    var anim = AddOrUpdateDoubleAnimation("TranslateX",From, To, Duration);
+        //    Storyboard.SetTargetProperty(anim, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
+        //}
+
+        public void AddTranslationX(double to, double duration = _defaultDuration, EasingFunctionBase easingFunction = null)
         {
-            AddTranslationX(To, _defaultDuration);
+            double from = 0;
+            if (_element.RenderTransform is CompositeTransform)
+                from = (_element.RenderTransform as CompositeTransform).TranslateX;
+            AddTranslationX(from, to, duration, easingFunction);
         }
 
-        public void AddTranslationX(double To, double Duration)
+        public void AddTranslationX(double from, double to, double duration = _defaultDuration, EasingFunctionBase easingFunction = null)
         {
-            AddTranslationX((_element.RenderTransform as CompositeTransform).TranslateX, To, Duration);
-        }
-
-        private void AddTranslationX(double From, double To, double Duration)
-        {
-            var anim = AddOrUpdateDoubleAnimation("TranslateX",From, To, Duration);
+            var anim = AddOrUpdateDoubleAnimation("TranslateX", from, to, duration, easingFunction);
             Storyboard.SetTargetProperty(anim, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
         }
 
-        public void AddTranslationY(double value)
+        public void AddTranslationY(double to, double duration = _defaultDuration, EasingFunctionBase easingFunction = null)
         {
-            AddTranslationY(value, _defaultDuration);
+            double from = 0;
+            if (_element.RenderTransform is CompositeTransform)
+                from = (_element.RenderTransform as CompositeTransform).TranslateY;
+            AddTranslationY(from, to, duration, easingFunction);
         }
-
-        public void AddTranslationY(double To, double Duration)
+        
+        public void AddTranslationY(double from, double to, double duration = _defaultDuration, EasingFunctionBase easingFunction = null)
         {
-            AddTranslationY((_element.RenderTransform as CompositeTransform).TranslateY, To, Duration);
-        }
-
-        public void AddTranslationY(double From, double To, double Duration)
-        {
-            var anim = AddOrUpdateDoubleAnimation("TranslateY", From, To, Duration);
+            var anim = AddOrUpdateDoubleAnimation("TranslateY", from, to, duration, easingFunction);
             Storyboard.SetTargetProperty(anim, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
         }
+
 
         public void AddOpacity(double To)
         {
