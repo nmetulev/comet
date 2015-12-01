@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
-    "Comet": "0.0.1-beta5",
-    "Faker.Net.Portable": "2.0.2.44",
+    "Comet": "0.1.0",
+    "Faker.Net.Portable": "2.1.0.63",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
   },
   "frameworks": {
