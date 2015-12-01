@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 namespace Comet.Converters
 {
     /// <summary>
-    /// Converter for returning a pecific value when other value is a specific value, or returning otherwise
+    /// Converter for returning a specific value when a value equals to the spcified Value, or returning otherwise
     /// </summary>
     public class ValueWhenConverter : IValueConverter
     {
