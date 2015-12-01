@@ -2,23 +2,31 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Comet</id>
-    <version>0.0.1-beta5</version>
+    <version>0.1</version>
     <title>Comet</title>
     <authors>Nikola Metulev</authors>
     <owners>Nikola Metulev</owners>
-    <licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
-    <projectUrl>http://metulev.com</projectUrl>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/nmetulev/comet</projectUrl>
     <iconUrl>http://i.imgur.com/VWx1FQw.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Controls for the Universal Windows Platform</description>
+    <description>Universal Windows Platform Control and Utility library </description>
     <language>en-US</language>
     <releaseNotes><![CDATA[
-        First release of Comet
+        First release of Comet v0.1 (301115)
 	Includes:
-	* SlidableItem
-	* PullToRefreshListView 
+	* Comet.Controls.SlidableListItem 
+	* 		 RefreshableListView 
+
+	* Comet.Converters.DateTimeFormatConverter
+	* 		   HexToSolidColorBrushConverter
+	* 		   ValueWhenConverter
+
+	* Comet.Extensions.RenderToRandomAccessStream
+	* 		   RenderToBitmapImage
+	* 		   FindChildren<T>
 	]]></releaseNotes>
-    <tags>xaml uwp metro converters pull-to-refresh slidableitem pulltorefresh win10 windows10 controls</tags>
+    <tags>xaml uwp metro converters pull-to-refresh slidableitem pulltorefresh refreshablelistview win10 windows10 controls wpdev</tags>
     <dependencies>
       <group targetFramework="uap10.0">
         <dependency id="System.Collections" version="4.0.10" />
