@@ -16,7 +16,7 @@
         First release of Comet v0.1 (301115)
 	Includes:
 	* Comet.Controls.SlidableListItem 
-	* 		 RefreshableListView 
+	* 		 PullToRefreshListView
 
 	* Comet.Converters.DateTimeFormatConverter
 	* 		   HexToSolidColorBrushConverter
@@ -26,7 +26,7 @@
 	* 		   RenderToBitmapImage
 	* 		   FindChildren<T>
 	]]></releaseNotes>
-    <tags>xaml uwp metro converters pull-to-refresh slidableitem pulltorefresh refreshablelistview win10 windows10 controls wpdev</tags>
+    <tags>xaml uwp metro converters pull-to-refresh slidableitem pulltorefresh pulltorefreshlistview refreshablelistview win10 windows10 controls wpdev</tags>
     <dependencies>
       <group targetFramework="uap10.0">
         <dependency id="System.Collections" version="4.0.10" />
