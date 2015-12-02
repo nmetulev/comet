@@ -27,6 +27,13 @@ namespace Comet.Controls
     public class PullToRefreshListView : ListView
     {
         #region Private Variables
+        const string PART_ROOT = "Root";
+        const string PART_SCROLLER = "ScrollViewer";
+        const string PART_CONTENT_TRANSFORM = "ContentTransform";
+        const string PART_SCROLLER_CONTENT = "ScrollerContent";
+        const string PART_REFRESH_INDICATOR_BORDER = "RefreshIndicator";
+        const string PART_INDICATOR_TRANSFORM = "RefreshIndicatorTransform";
+        const string PART_DEFAULT_INDICATOR_CONTENT = "DefaultIndicatorContent";
         // Root element in template
         private Border Root;
         // Container of Refresh Indicator
@@ -41,10 +48,6 @@ namespace Comet.Controls
         private Grid ScrollerContent;
         // Container for default content for the Refresh Indicator
         private TextBlock DefaultIndicatorContent;
-        // Event Handler for when Refresh has been requested
-        public event EventHandler RefreshRequested;
-        // Event Handler for providing the distance that the user has pulled
-        public event EventHandler<RefreshProgressEventArgs> PullProgressChanged;
         // used for calculating distance pulled between ticks
         private double lastOffset = 0.0;
         // used for storing pulled distance
@@ -54,18 +57,22 @@ namespace Comet.Controls
         // used for determining if Refresh should be requested
         DateTime lastRefreshActivation = default(DateTime);
         // used for flagging if refresh has been activated
-        bool refreshActivated = false;
+        private bool refreshActivated = false;
         // property used to calculate the overscroll rate
         private double OverscrollMultiplier;
         #endregion
 
-        const string PART_ROOT = "Root";
-        const string PART_SCROLLER = "ScrollViewer";
-        const string PART_CONTENT_TRANSFORM = "ContentTransform";
-        const string PART_SCROLLER_CONTENT = "ScrollerContent";
-        const string PART_REFRESH_INDICATOR_BORDER = "RefreshIndicator";
-        const string PART_INDICATOR_TRANSFORM = "RefreshIndicatorTransform";
-        const string PART_DEFAULT_INDICATOR_CONTENT = "DefaultIndicatorContent";
+        #region Properties
+        /// <summary>
+        /// Occurs when the user has requested content to be refreshed
+        /// </summary>
+        public event EventHandler RefreshRequested;
+        
+        /// <summary>
+        /// Occurs when listview overscroll distance is changed
+        /// </summary>
+        public event EventHandler<RefreshProgressEventArgs> PullProgressChanged;
+        #endregion
 
         /// <summary>
         /// Creates a new instance of <see cref="PullToRefreshListView"/>
@@ -244,7 +251,7 @@ namespace Comet.Controls
         #region Dependency Properties
 
         /// <summary>
-        /// Gets or sets the Overscroll Limit. Value between 0 and 1 where 1 is the height of the control
+        /// Gets or sets the Overscroll Limit. Value between 0 and 1 where 1 is the height of the control. Default is 0.3
         /// </summary>
         public double OverscrollLimit
         {
@@ -276,7 +283,7 @@ namespace Comet.Controls
 
 
         /// <summary>
-        /// Gets or sets the PullThreshold in pixels for when Refresh should be Requested
+        /// Gets or sets the PullThreshold in pixels for when Refresh should be Requested. Default is 100
         /// </summary>
         public double PullThreshold
         {
@@ -291,7 +298,7 @@ namespace Comet.Controls
             DependencyProperty.Register("PullThreshold", typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(100.0));
 
         /// <summary>
-        /// Gets or sets the Command that will be incoked when Refresh is requested
+        /// Gets or sets the Command that will be invoked when Refresh is requested
         /// </summary>
         public ICommand RefreshCommand
         {

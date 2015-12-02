@@ -24,6 +24,10 @@ namespace Comet.Controls
     public class SlidableListItem : ContentControl
     {
         #region Private Variables
+        const string PART_CONTENT_GRID = "ContentGrid";
+        const string PART_COMMAND_CONTAINER = "CommandContainer";
+        const string PART_LEFT_COMMAND_PANEL = "LeftCommandPanel";
+        const string PART_RIGHT_COMMAND_PANEL = "RightCommandPanel";
         // Content Container
         private Grid contentGrid;
         // transform for sliding content
@@ -42,16 +46,19 @@ namespace Comet.Controls
         private DoubleAnimation contentAnimation;
         // storyboard for snaping back to default position
         private Storyboard contentStoryboard;
-        // event handler when right command has been requested
-        public event EventHandler RightCommandRequested;
-        // event handler when left command has been requested
-        public event EventHandler LeftCommandRequested;
         #endregion
 
-        const string PART_CONTENT_GRID = "ContentGrid";
-        const string PART_COMMAND_CONTAINER = "CommandContainer";
-        const string PART_LEFT_COMMAND_PANEL = "LeftCommandPanel";
-        const string PART_RIGHT_COMMAND_PANEL = "RightCommandPanel";
+        #region Events
+        /// <summary>
+        /// Occurs when the user swipes to the left to activate the right action
+        /// </summary>
+        public event EventHandler RightCommandRequested;
+
+        /// <summary>
+        /// Occurs when the user swipes to the right to activate the left action
+        /// </summary>
+        public event EventHandler LeftCommandRequested;
+        #endregion
 
         /// <summary>
         /// Creates a new instance of <see cref="SlidableListItem"/>
@@ -173,7 +180,8 @@ namespace Comet.Controls
         #region Dependency Properties
 
         /// <summary>
-        /// Gets or sets the Activation Width
+        /// Gets or sets the amount of pixels the content needs to be swiped for an 
+        /// action to be requested
         /// </summary>
         public double ActivationWidth
         {
