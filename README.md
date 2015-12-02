@@ -8,7 +8,7 @@ Comet is an open source library for .NET/XAML Universal Windows Apps that attemp
 Controls:
 
  - SlidableListItem 
- - RefreshableListView
+ - PullToRefreshListView
 
 Converters:
 
