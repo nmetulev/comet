@@ -4,11 +4,13 @@
 
 Comet is an open source library for .NET/XAML Universal Windows Apps that attempts to fill the gaps and provide a collection of APIs and controls based on the feedback and work from the developer community. The XAML/.NET framework for the Universal Windows Platform is a continuously growing developer framework, but there are controls and utilities that are missing.
 
+[Introducing Comet](http://metulev.com/introducing-comet/)
+
 ## Included
 Controls:
 
- - SlidableListItem 
- - PullToRefreshListView
+ - [SlidableListItem](https://github.com/nmetulev/comet/wiki/SlidableListItem) 
+ - [PullToRefreshListView](https://github.com/nmetulev/comet/wiki/PullToRefreshListView)
 
 Converters:
 
