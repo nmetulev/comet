@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "Comet": "0.1.0",
+    "Comet": "0.1.0.1",
     "Faker.Net.Portable": "2.1.0.63",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
   },

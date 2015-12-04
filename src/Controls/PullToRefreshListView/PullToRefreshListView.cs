@@ -121,7 +121,7 @@ namespace Comet.Controls
                 RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             };
             
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
+            
 
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
@@ -143,7 +143,10 @@ namespace Comet.Controls
         {
             // sometimes the value gets stuck at 0.something, so checking if less than 1
             if (Scroller.VerticalOffset < 1)
+            {
+                CompositionTarget.Rendering += CompositionTarget_Rendering;
                 manipulating = true;
+            }
         }
 
         /// <summary>
@@ -152,6 +155,7 @@ namespace Comet.Controls
         private void Scroller_DirectManipulationCompleted(object sender, object e)
         {
             manipulating = false;
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
             RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             ContentTransform.TranslateY = 0;
 
@@ -279,7 +283,7 @@ namespace Comet.Controls
         /// Identifies the <see cref="OverscrollLimit"/> property.
         /// </summary>
         public static readonly DependencyProperty OverscrollLimitProperty =
-            DependencyProperty.Register("OverscrollLimit", typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(0.3));
+            DependencyProperty.Register("OverscrollLimit", typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(0.4));
 
 
         /// <summary>
