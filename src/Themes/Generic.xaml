@@ -122,4 +122,36 @@
         </Setter>
     </Style>
 
+    <Style TargetType="local:RangeSelector" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RangeSelector">
+                    <Grid Height="32">
+                        <Grid.Resources>
+                            <Style TargetType="Thumb">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Ellipse Width="32" Height="32" Fill="{TemplateBinding Background}" Stroke="{TemplateBinding Foreground}" StrokeThickness="4" RenderTransformOrigin="0.5 0.5">
+                                                <Ellipse.RenderTransform>
+                                                    <TranslateTransform X="-16"></TranslateTransform>
+                                                </Ellipse.RenderTransform>
+                                            </Ellipse>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Resources>
+                        <Rectangle Height="8" Fill="{TemplateBinding Background}" Margin="12,0"></Rectangle>
+                        <Canvas x:Name="ContainerCanvas" Margin="16,0">
+                            <Rectangle x:Name="ActiveRectangle" Fill="{TemplateBinding Foreground}" Height="8" Canvas.Top="12"></Rectangle>
+                            <Thumb x:Name="MinThumb" Background="{TemplateBinding Background}" />
+                            <Thumb x:Name="MaxThumb" Background="{TemplateBinding Background}"/>
+                        </Canvas>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>
