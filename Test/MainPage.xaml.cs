@@ -26,6 +26,7 @@ namespace Test
             testItems.Add(new TestItem() { Name = "PullToRefreshListView", Page = typeof(RefreshableListViewTest) });
             testItems.Add(new TestItem() { Name = "SlidableListItem", Page = typeof(SlidableListItem) });
             testItems.Add(new TestItem() { Name = "Extension:UIElementToImage", Page = typeof(UIElementToImage) });
+            testItems.Add(new TestItem() { Name = "RangeSelector", Page = typeof(RangeSelectorTest) });
             list.ItemsSource = testItems;
             frame.Navigate(testItems[0].Page);
 

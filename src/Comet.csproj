@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs" />
     <Compile Include="Controls\PullToRefreshListView\RefreshProgressEventArgs.cs" />
+    <Compile Include="Controls\RangeSelector\RangeSelector.cs" />
     <Compile Include="Controls\SlidableListItem\SlidableListItem.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\HexToSolidColorBrushConverter.cs" />
@@ -124,7 +125,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\Comet.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
