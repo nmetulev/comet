@@ -115,6 +115,8 @@ namespace Comet.Controls
                 RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             };
 
+            //TODO : Uncomment to reveal memory leak in debug window : you will see multiple instance of the RefreshableListViewTest page
+            //CompositionTarget.Rendering += CompositionTarget_Rendering;
 
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
@@ -137,6 +139,7 @@ namespace Comet.Controls
             // sometimes the value gets stuck at 0.something, so checking if less than 1
             if (Scroller.VerticalOffset < 1)
             {
+                //TODO : comment to reveal memory leak
                 CompositionTarget.Rendering += CompositionTarget_Rendering;
             }
         }
@@ -146,6 +149,7 @@ namespace Comet.Controls
         /// </summary>
         private void Scroller_DirectManipulationCompleted(object sender, object e)
         {
+            //TODO : Comment to reveal memory leak 
             CompositionTarget.Rendering -= CompositionTarget_Rendering;
             RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             ContentTransform.TranslateY = 0;

@@ -34,7 +34,7 @@ namespace Test
         {
             base.OnNavigatedTo(e);
 
-            //bad but will ensure that all collectable object are collected.
+            //bad but will ensure that all collectable objects are collected.
             GC.Collect();
             Debug.WriteLine(LeakTracker.Dump());
         }
