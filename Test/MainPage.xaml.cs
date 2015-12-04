@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Test.Tests;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -15,9 +17,26 @@ namespace Test
     {
         public MainPage()
         {
+            LeakTracker.Add(this);
             this.InitializeComponent();
 
             this.Loaded += MainPage_Loaded;
+            this.frame.Navigated += (a, e) =>
+            {
+                GC.Collect();
+                Debug.WriteLine(LeakTracker.Dump() + "\r\n");
+            };
+        }
+
+
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            //bad but will ensure that all collectable object are collected.
+            GC.Collect();
+            Debug.WriteLine(LeakTracker.Dump());
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
