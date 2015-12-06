@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 
 namespace Comet.Controls
 {
@@ -67,7 +61,7 @@ namespace Comet.Controls
         /// Occurs when the user has requested content to be refreshed
         /// </summary>
         public event EventHandler RefreshRequested;
-        
+
         /// <summary>
         /// Occurs when listview overscroll distance is changed
         /// </summary>
@@ -120,13 +114,11 @@ namespace Comet.Controls
             {
                 RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             };
-            
-            
 
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 OverscrollMultiplier = OverscrollLimit * 10;
-            } 
+            }
             else
             {
                 OverscrollMultiplier = (OverscrollLimit * 10) / DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
@@ -145,7 +137,6 @@ namespace Comet.Controls
             if (Scroller.VerticalOffset < 1)
             {
                 CompositionTarget.Rendering += CompositionTarget_Rendering;
-                manipulating = true;
             }
         }
 
@@ -154,7 +145,6 @@ namespace Comet.Controls
         /// </summary>
         private void Scroller_DirectManipulationCompleted(object sender, object e)
         {
-            manipulating = false;
             CompositionTarget.Rendering -= CompositionTarget_Rendering;
             RefreshIndicatorTransform.TranslateY = -RefreshIndicatorBorder.ActualHeight;
             ContentTransform.TranslateY = 0;
@@ -186,12 +176,6 @@ namespace Comet.Controls
         /// <param name="e"></param>
         private void CompositionTarget_Rendering(object sender, object e)
         {
-            if (!manipulating) return;
-            //else if (Scroller.VerticalOffset > 0)
-            //{
-            //    manipulating = false;
-            //    return;
-            //}
             Rect elementBounds = ScrollerContent.TransformToVisual(Root).TransformBounds(new Rect());
 
             var offset = elementBounds.Y;
