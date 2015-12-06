@@ -43,11 +43,13 @@ namespace Comet.Controls
         Thumb MinThumb;
         Thumb MaxThumb;
         Canvas ContainerCanvas;
+        double _oldValue;
+
 
         /// <summary>
         /// Event raised when lower or upper range values are changed.
         /// </summary>
-        public event Action ValueChanged;
+        public event EventHandler<RangeChangedEventArgs> ValueChanged;
 
         /// <summary>
         /// Create a default range selector control.
@@ -241,19 +243,28 @@ namespace Comet.Controls
         {
             Canvas.SetZIndex(MinThumb, 10);
             Canvas.SetZIndex(MaxThumb, 0);
+            _oldValue = RangeMin;
         }
 
         private void MaxThumb_DragStarted(object sender, DragStartedEventArgs e)
         {
             Canvas.SetZIndex(MinThumb, 0);
             Canvas.SetZIndex(MaxThumb, 10);
+            _oldValue = RangeMax;
         }
 
         private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
             if (ValueChanged != null)
             {
-                ValueChanged();
+                if ((sender.Equals(MinThumb)))
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(_oldValue, RangeMin, RangeSelectorProperty.MinimumValue));
+                }
+                else
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(_oldValue, RangeMax, RangeSelectorProperty.MaximumValue));
+                }
             }
         }
     }

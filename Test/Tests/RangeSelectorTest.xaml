@@ -11,7 +11,7 @@
     <Grid x:Name="Root" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="{Binding RangeMin, ElementName=RangeSelector}" Margin="10,0" Width="50"></TextBlock>
-            <comet:RangeSelector x:Name="RangeSelector" Width="300" Minimum="0" Maximum="100" RangeMin="0" RangeMax="100" Foreground="Orange" Background="Gray"></comet:RangeSelector>
+            <comet:RangeSelector x:Name="RangeSelector" ValueChanged="RangeSelector_ValueChanged" Width="300" Minimum="0" Maximum="100" RangeMin="0" RangeMax="100" Foreground="Orange" Background="Gray"></comet:RangeSelector>
             <TextBlock Text="{Binding RangeMax, ElementName=RangeSelector}" Margin="10,0" Width="50"></TextBlock>
         </StackPanel>
     </Grid>

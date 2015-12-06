@@ -3,6 +3,7 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -32,6 +33,12 @@ namespace Test.Tests
         public RangeSelectorTest()
         {
             this.InitializeComponent();
+        }
+
+        private void RangeSelector_ValueChanged(object sender, Comet.Controls.RangeChangedEventArgs e)
+        {
+            Debug.WriteLine("Changed: " + e.ChangedRangeProperty);
+            Debug.WriteLine("OldValue: " + e.OldValue + " NewValue: " + e.NewValue);
         }
     }
 }
