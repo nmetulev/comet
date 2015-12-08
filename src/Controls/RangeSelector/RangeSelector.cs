@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Xaml;
@@ -39,11 +40,15 @@ namespace Comet.Controls
         /// </summary>
         public static readonly DependencyProperty RangeMaxProperty = DependencyProperty.Register("RangeMax", typeof(double), typeof(RangeSelector), new PropertyMetadata(1.0, null));
 
+        Border OutofRangeContentContainer;
         Rectangle ActiveRectangle;
         Thumb MinThumb;
         Thumb MaxThumb;
         Canvas ContainerCanvas;
         double _oldValue;
+        bool _valuesAssigned = false;
+        bool _minSet = false;
+        bool _maxSet = false;
 
 
         /// <summary>
@@ -64,10 +69,17 @@ namespace Comet.Controls
         /// </summary>
         protected override void OnApplyTemplate()
         {
+            // need to make sure the values can be set in XAML and don't overwright eachother
+            VerifyValues();
+            _valuesAssigned = true;
+
+            OutofRangeContentContainer = GetTemplateChild("OutofRangeContentContainer") as Border;
             ActiveRectangle = GetTemplateChild("ActiveRectangle") as Rectangle;
             MinThumb = GetTemplateChild("MinThumb") as Thumb;
             MaxThumb = GetTemplateChild("MaxThumb") as Thumb;
             ContainerCanvas = GetTemplateChild("ContainerCanvas") as Canvas;
+
+            OutofRangeContentContainer.PointerReleased += OutofRangeContentContainer_PointerReleased;
 
             MinThumb.DragCompleted += Thumb_DragCompleted;
             MinThumb.DragDelta += MinThumb_DragDelta;
@@ -82,9 +94,59 @@ namespace Comet.Controls
             base.OnApplyTemplate();
         }
 
+        private void OutofRangeContentContainer_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var position = e.GetCurrentPoint(OutofRangeContentContainer).Position.X;
+            var normalizedPosition = (position / OutofRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
+
+            if (normalizedPosition < RangeMin)
+            {
+                if (ValueChanged != null)
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(RangeMin, normalizedPosition, RangeSelectorProperty.MinimumValue));
+                }
+                RangeMin = normalizedPosition;
+            }
+
+            if (normalizedPosition > RangeMax)
+            {
+                if (ValueChanged != null)
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(RangeMax, normalizedPosition, RangeSelectorProperty.MaximumValue));
+                }
+                RangeMax = normalizedPosition;
+            }
+
+            
+        }
+
         private void ContainerCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             SyncThumbs();
+        }
+
+        private void VerifyValues()
+        {
+            if (Minimum > Maximum)
+            {
+                Minimum = Maximum;
+                Maximum = Maximum;
+            }
+
+            if (Minimum == Maximum)
+            {
+                Maximum += 0.01;
+            }
+
+            if (!_maxSet) RangeMax = Maximum;
+            if (!_minSet) RangeMin = Minimum;
+
+            if (RangeMin < Minimum) RangeMin = Minimum;
+            if (RangeMax < Minimum) RangeMax = Minimum;
+            if (RangeMin > Maximum) RangeMin = Maximum;
+            if (RangeMax > Maximum) RangeMax = Maximum;
+
+            if (RangeMax < RangeMin) RangeMin = RangeMax;
         }
 
         /// <summary>
@@ -101,11 +163,17 @@ namespace Comet.Controls
             }
             set
             {
-                if (value > Maximum)
-                {
-                    value = Maximum;
-                }
                 SetValue(MinimumProperty, value);
+
+                if (!_valuesAssigned) return;
+                
+                if (RangeMin < value)
+                    RangeMin = value;
+                if (RangeMax < value)
+                    RangeMax = value;
+                if (Maximum < value)
+                    Maximum = value;
+                
             }
         }
 
@@ -123,11 +191,19 @@ namespace Comet.Controls
             }
             set
             {
-                if (value < Minimum)
-                {
-                    value = Minimum;
-                }
+                
                 SetValue(MaximumProperty, value);
+
+                if (!_valuesAssigned) return;
+
+                if (RangeMax > value)
+                    RangeMax = value;
+
+                if (RangeMin > value)
+                    RangeMin = value;
+
+                if (Minimum > value)
+                    Minimum = value;
             }
         }
 
@@ -145,23 +221,32 @@ namespace Comet.Controls
             }
             set
             {
-                if (value < Minimum)
+                _minSet = true;
+                if (_valuesAssigned)
                 {
-                    value = Minimum;
-                }
+                    if (value < Minimum)
+                    {
+                        value = Minimum;
+                    }
 
-                if (value > Maximum)
+                    if (value > Maximum)
+                    {
+                        value = Maximum;
+                    }
+
+                    SetValue(RangeMinProperty, value);
+                    SyncThumbs();
+
+                    if (value > RangeMax)
+                    {
+                        RangeMax = value;
+                    }
+                }
+                else
                 {
-                    value = Maximum;
+                    SetValue(RangeMinProperty, value);
+                    SyncThumbs();
                 }
-
-                if (value > RangeMax)
-                {
-                    RangeMax = value;
-                }
-
-                SetValue(RangeMinProperty, value);
-                SyncThumbs();
             }
         }
 
@@ -179,22 +264,34 @@ namespace Comet.Controls
             }
             set
             {
-                if (value < Minimum)
+                _maxSet = true;
+                if (_valuesAssigned)
                 {
-                    value = Minimum;
+                    if (value < Minimum)
+                    {
+                        value = Minimum;
+                    }
+
+                    if (value > Maximum)
+                    {
+                        value = Maximum;
+                    }
+
+                    SetValue(RangeMaxProperty, value);
+                    SyncThumbs();
+
+                    if (value < RangeMin)
+                    {
+                        RangeMin = value;
+                    }
                 }
 
-                if (value > Maximum)
+                else
                 {
-                    value = Maximum;
+                    SetValue(RangeMaxProperty, value);
+                    SyncThumbs();
                 }
 
-                if (value < RangeMin)
-                {
-                    RangeMin = value;
-                }
-                SetValue(RangeMaxProperty, value);
-                SyncThumbs();
             }
         }
 
