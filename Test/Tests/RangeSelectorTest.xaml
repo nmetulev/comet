@@ -17,21 +17,28 @@
                 <c:RangeSelector x:Name="RangeSelector" ValueChanged="RangeSelector_ValueChanged" Width="300" ></c:RangeSelector>
                 <TextBlock Text="{Binding RangeMax, ElementName=RangeSelector}" Margin="10,0" Width="50"></TextBlock>
             </StackPanel>
-            
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="Disabled" Width="200"></TextBlock>
+                <TextBlock Text="{Binding RangeMin, ElementName=RangeSelectorD}" Margin="10,0" Width="50"></TextBlock>
+                <c:RangeSelector x:Name="RangeSelectorD" IsEnabled="False" ValueChanged="RangeSelector_ValueChanged" Width="300" ></c:RangeSelector>
+                <TextBlock Text="{Binding RangeMax, ElementName=RangeSelectorD}" Margin="10,0" Width="50"></TextBlock>
+            </StackPanel>
+
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="Colors" Width="200"></TextBlock>
                 <TextBlock Text="{Binding RangeMin, ElementName=RangeSelector1}" Margin="10,0" Width="50"></TextBlock>
                 <c:RangeSelector x:Name="RangeSelector1" ValueChanged="RangeSelector_ValueChanged" Width="300" Foreground="Red" Background="Green"></c:RangeSelector>
                 <TextBlock Text="{Binding RangeMax, ElementName=RangeSelector1}" Margin="10,0" Width="50"></TextBlock>
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="Min and Max set" Width="200"></TextBlock>
                 <TextBlock Text="{Binding RangeMin, ElementName=RangeSelector2}" Margin="10,0" Width="50"></TextBlock>
                 <c:RangeSelector x:Name="RangeSelector2" ValueChanged="RangeSelector_ValueChanged" Width="300" Minimum="10" Maximum="100"></c:RangeSelector>
                 <TextBlock Text="{Binding RangeMax, ElementName=RangeSelector2}" Margin="10,0" Width="50"></TextBlock>
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="Min, Max, Range set" Width="200"></TextBlock>
                 <TextBlock Text="{Binding RangeMin, ElementName=RangeSelector3}" Margin="10,0" Width="50"></TextBlock>

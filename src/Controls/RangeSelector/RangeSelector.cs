@@ -18,6 +18,10 @@ namespace Comet.Controls
     /// <summary>
     /// RangeSelector is a "double slider" control for range values.
     /// </summary>
+    [TemplateVisualState(Name = "Normal", GroupName = "CommonStates")]
+    [TemplateVisualState(Name = "MinPressed", GroupName = "CommonStates")]
+    [TemplateVisualState(Name = "MaxPressed", GroupName = "CommonStates")]
+    [TemplateVisualState(Name = "Disabled", GroupName = "CommonStates")]
     public sealed class RangeSelector : Control
     {
         /// <summary>
@@ -79,7 +83,7 @@ namespace Comet.Controls
             MaxThumb = GetTemplateChild("MaxThumb") as Thumb;
             ContainerCanvas = GetTemplateChild("ContainerCanvas") as Canvas;
 
-            OutofRangeContentContainer.PointerReleased += OutofRangeContentContainer_PointerReleased;
+            //OutofRangeContentContainer.PointerReleased += OutofRangeContentContainer_PointerReleased;
 
             MinThumb.DragCompleted += Thumb_DragCompleted;
             MinThumb.DragDelta += MinThumb_DragDelta;
@@ -91,34 +95,45 @@ namespace Comet.Controls
 
             ContainerCanvas.SizeChanged += ContainerCanvas_SizeChanged;
 
+            if (IsEnabled)
+            {
+                VisualStateManager.GoToState(this, "Normal", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Disabled", true);
+            }
+
+            IsEnabledChanged += RangeSelector_IsEnabledChanged;
+
+
             base.OnApplyTemplate();
         }
 
-        private void OutofRangeContentContainer_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            var position = e.GetCurrentPoint(OutofRangeContentContainer).Position.X;
-            var normalizedPosition = (position / OutofRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
+        //private void OutofRangeContentContainer_PointerReleased(object sender, PointerRoutedEventArgs e)
+        //{
+        //    var position = e.GetCurrentPoint(OutofRangeContentContainer).Position.X;
+        //    var normalizedPosition = (position / OutofRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
 
-            if (normalizedPosition < RangeMin)
-            {
-                if (ValueChanged != null)
-                {
-                    ValueChanged(this, new RangeChangedEventArgs(RangeMin, normalizedPosition, RangeSelectorProperty.MinimumValue));
-                }
-                RangeMin = normalizedPosition;
-            }
+        //    if (normalizedPosition < RangeMin)
+        //    {
+        //        if (ValueChanged != null)
+        //        {
+        //            ValueChanged(this, new RangeChangedEventArgs(RangeMin, normalizedPosition, RangeSelectorProperty.MinimumValue));
+        //        }
+        //        RangeMin = normalizedPosition;
+        //    }
 
-            if (normalizedPosition > RangeMax)
-            {
-                if (ValueChanged != null)
-                {
-                    ValueChanged(this, new RangeChangedEventArgs(RangeMax, normalizedPosition, RangeSelectorProperty.MaximumValue));
-                }
-                RangeMax = normalizedPosition;
-            }
+        //    if (normalizedPosition > RangeMax)
+        //    {
+        //        if (ValueChanged != null)
+        //        {
+        //            ValueChanged(this, new RangeChangedEventArgs(RangeMax, normalizedPosition, RangeSelectorProperty.MaximumValue));
+        //        }
+        //        RangeMax = normalizedPosition;
+        //    }
 
-            
-        }
+        //}
 
         private void ContainerCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -341,6 +356,8 @@ namespace Comet.Controls
             Canvas.SetZIndex(MinThumb, 10);
             Canvas.SetZIndex(MaxThumb, 0);
             _oldValue = RangeMin;
+
+            VisualStateManager.GoToState(this, "MinPressed", true);
         }
 
         private void MaxThumb_DragStarted(object sender, DragStartedEventArgs e)
@@ -348,6 +365,7 @@ namespace Comet.Controls
             Canvas.SetZIndex(MinThumb, 0);
             Canvas.SetZIndex(MaxThumb, 10);
             _oldValue = RangeMax;
+            VisualStateManager.GoToState(this, "MaxPressed", true);
         }
 
         private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
@@ -362,6 +380,21 @@ namespace Comet.Controls
                 {
                     ValueChanged(this, new RangeChangedEventArgs(_oldValue, RangeMax, RangeSelectorProperty.MaximumValue));
                 }
+            }
+
+            VisualStateManager.GoToState(this, "Normal", true);
+
+        }
+
+        private void RangeSelector_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.IsEnabled)
+            {
+                VisualStateManager.GoToState(this, "Normal", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Disabled", true);
             }
         }
     }

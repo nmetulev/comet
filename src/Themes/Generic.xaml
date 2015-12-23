@@ -129,6 +129,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:RangeSelector">
                     <Grid Height="24">
+                        
                         <Grid.Resources>
                             <Style x:Key="SliderThumbStyle" TargetType="Thumb">
                                 <Setter Property="BorderThickness" Value="0"/>
@@ -136,20 +137,67 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Thumb">
-                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                                            <Border Height="24" Width="24" Background="Transparent">
+                                                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                        Background="{TemplateBinding Background}" 
+                                                        CornerRadius="4"
+                                                        Width="8"
+                                                        Height="24"
+                                                        HorizontalAlignment="Center"/>
+                                                <Border.RenderTransform>
+                                                    <TranslateTransform X="-8"></TranslateTransform>
+                                                </Border.RenderTransform>
+                                            </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
                             </Style>
                         </Grid.Resources>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="MinPressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MinThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="MaxPressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MaxThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="BackgroundElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="ActiveRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MinThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MaxThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
 
                         <Border x:Name="OutofRangeContentContainer" Height="24" Background="Transparent" Margin="12,0">
-                            <Rectangle Height="2" Fill="{TemplateBinding Background}"></Rectangle>
+                            <Rectangle x:Name="BackgroundElement" Height="2" Fill="{TemplateBinding Background}"></Rectangle>
                         </Border>
                         <Canvas x:Name="ContainerCanvas" Margin="12,0">
                             <Rectangle x:Name="ActiveRectangle" Fill="{TemplateBinding Foreground}" Height="2" Canvas.Top="11"></Rectangle>
-                            <Thumb x:Name="MinThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" Height="24" Width="8"/>
-                            <Thumb x:Name="MaxThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" Height="24" Width="8"/>
+                            <Thumb x:Name="MinThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" />
+                            <Thumb x:Name="MaxThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" />
                         </Canvas>
                     </Grid>
                 </ControlTemplate>
