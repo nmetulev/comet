@@ -191,7 +191,7 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Border x:Name="OutofRangeContentContainer" Height="24" Background="Transparent" Margin="12,0">
+                        <Border x:Name="OutOfRangeContentContainer" Height="24" Background="Transparent" Margin="12,0">
                             <Rectangle x:Name="BackgroundElement" Height="2" Fill="{TemplateBinding Background}"></Rectangle>
                         </Border>
                         <Canvas x:Name="ContainerCanvas" Margin="12,0">

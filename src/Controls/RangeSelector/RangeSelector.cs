@@ -44,7 +44,7 @@ namespace Comet.Controls
         /// </summary>
         public static readonly DependencyProperty RangeMaxProperty = DependencyProperty.Register("RangeMax", typeof(double), typeof(RangeSelector), new PropertyMetadata(1.0, null));
 
-        Border OutofRangeContentContainer;
+        Border OutOfRangeContentContainer;
         Rectangle ActiveRectangle;
         Thumb MinThumb;
         Thumb MaxThumb;
@@ -53,6 +53,8 @@ namespace Comet.Controls
         bool _valuesAssigned = false;
         bool _minSet = false;
         bool _maxSet = false;
+        bool _pointerManipulatingMin = false;
+        bool _pointerManipulatingMax = false;
 
 
         /// <summary>
@@ -73,17 +75,20 @@ namespace Comet.Controls
         /// </summary>
         protected override void OnApplyTemplate()
         {
-            // need to make sure the values can be set in XAML and don't overwright eachother
+            // need to make sure the values can be set in XAML and don't overwrite eachother
             VerifyValues();
             _valuesAssigned = true;
 
-            OutofRangeContentContainer = GetTemplateChild("OutofRangeContentContainer") as Border;
+            OutOfRangeContentContainer = GetTemplateChild("OutOfRangeContentContainer") as Border;
             ActiveRectangle = GetTemplateChild("ActiveRectangle") as Rectangle;
             MinThumb = GetTemplateChild("MinThumb") as Thumb;
             MaxThumb = GetTemplateChild("MaxThumb") as Thumb;
             ContainerCanvas = GetTemplateChild("ContainerCanvas") as Canvas;
 
-            //OutofRangeContentContainer.PointerReleased += OutofRangeContentContainer_PointerReleased;
+            OutOfRangeContentContainer.PointerPressed += OutOfRangeContentContainer_PointerPressed;
+            OutOfRangeContentContainer.PointerMoved += OutOfRangeContentContainer_PointerMoved;
+            OutOfRangeContentContainer.PointerReleased += OutOfRangeContentContainer_PointerReleased;
+            OutOfRangeContentContainer.PointerExited += OutOfRangeContentContainer_PointerExited;
 
             MinThumb.DragCompleted += Thumb_DragCompleted;
             MinThumb.DragDelta += MinThumb_DragDelta;
@@ -110,30 +115,98 @@ namespace Comet.Controls
             base.OnApplyTemplate();
         }
 
-        //private void OutofRangeContentContainer_PointerReleased(object sender, PointerRoutedEventArgs e)
-        //{
-        //    var position = e.GetCurrentPoint(OutofRangeContentContainer).Position.X;
-        //    var normalizedPosition = (position / OutofRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
+        private void OutOfRangeContentContainer_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var position = e.GetCurrentPoint(OutOfRangeContentContainer).Position.X;
+            var normalizedPosition = (position / OutOfRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
 
-        //    if (normalizedPosition < RangeMin)
-        //    {
-        //        if (ValueChanged != null)
-        //        {
-        //            ValueChanged(this, new RangeChangedEventArgs(RangeMin, normalizedPosition, RangeSelectorProperty.MinimumValue));
-        //        }
-        //        RangeMin = normalizedPosition;
-        //    }
+            if (_pointerManipulatingMin)
+            {
+                _pointerManipulatingMin = false;
+                ContainerCanvas.IsHitTestVisible = true;
+                if (ValueChanged != null)
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(RangeMin, normalizedPosition, RangeSelectorProperty.MinimumValue));
+                }
+            }
 
-        //    if (normalizedPosition > RangeMax)
-        //    {
-        //        if (ValueChanged != null)
-        //        {
-        //            ValueChanged(this, new RangeChangedEventArgs(RangeMax, normalizedPosition, RangeSelectorProperty.MaximumValue));
-        //        }
-        //        RangeMax = normalizedPosition;
-        //    }
+            else if (_pointerManipulatingMax)
+            {
+                _pointerManipulatingMax = false;
+                ContainerCanvas.IsHitTestVisible = true;
+                if (ValueChanged != null)
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(RangeMax, normalizedPosition, RangeSelectorProperty.MaximumValue));
+                }
+            }
 
-        //}
+            Debug.WriteLine("exited");
+        }
+
+        private void OutOfRangeContentContainer_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var position = e.GetCurrentPoint(OutOfRangeContentContainer).Position.X;
+            var normalizedPosition = (position / OutOfRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
+
+            if (_pointerManipulatingMin)
+            {
+                _pointerManipulatingMin = false;
+                ContainerCanvas.IsHitTestVisible = true;
+                if (ValueChanged != null)
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(RangeMin, normalizedPosition, RangeSelectorProperty.MinimumValue));
+                }
+            }
+
+            else if (_pointerManipulatingMax)
+            {
+                _pointerManipulatingMax = false;
+                ContainerCanvas.IsHitTestVisible = true;
+                if (ValueChanged != null)
+                {
+                    ValueChanged(this, new RangeChangedEventArgs(RangeMax, normalizedPosition, RangeSelectorProperty.MaximumValue));
+                }
+            }
+            Debug.WriteLine("released");
+
+        }
+
+        private void OutOfRangeContentContainer_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var position = e.GetCurrentPoint(OutOfRangeContentContainer).Position.X;
+            var normalizedPosition = (position / OutOfRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
+
+            if (_pointerManipulatingMin && normalizedPosition < RangeMax)
+            {
+                RangeMin = DragThumb(MinThumb, 0, Canvas.GetLeft(MaxThumb), position);
+            }
+            else if (_pointerManipulatingMax && normalizedPosition > RangeMin)
+            {
+                RangeMax = DragThumb(MaxThumb, Canvas.GetLeft(MinThumb), ContainerCanvas.ActualWidth, position);
+            }
+
+            Debug.WriteLine("moved");
+
+        }
+
+        private void OutOfRangeContentContainer_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var position = e.GetCurrentPoint(OutOfRangeContentContainer).Position.X;
+            var normalizedPosition = (position / OutOfRangeContentContainer.ActualWidth) * (Maximum - Minimum) + Minimum;
+            if (normalizedPosition < RangeMin)
+            {
+                _pointerManipulatingMin = true;
+                ContainerCanvas.IsHitTestVisible = false;
+            }
+            else if (normalizedPosition > RangeMax)
+            {
+                _pointerManipulatingMax = true;
+                ContainerCanvas.IsHitTestVisible = false;
+            }
+
+            Debug.WriteLine("pressed");
+
+        }
 
         private void ContainerCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -330,19 +403,16 @@ namespace Comet.Controls
 
         private void MinThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            RangeMin = DragThumb(MinThumb, 0, Canvas.GetLeft(MaxThumb), e);
+            RangeMin = DragThumb(MinThumb, 0, Canvas.GetLeft(MaxThumb), Canvas.GetLeft(MinThumb) + e.HorizontalChange);
         }
 
         private void MaxThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            RangeMax = DragThumb(MaxThumb, Canvas.GetLeft(MinThumb), ContainerCanvas.ActualWidth, e);
+            RangeMax = DragThumb(MaxThumb, Canvas.GetLeft(MinThumb), ContainerCanvas.ActualWidth, Canvas.GetLeft(MaxThumb) + e.HorizontalChange);
         }
 
-        private double DragThumb(Thumb thumb, double min, double max, DragDeltaEventArgs e)
+        private double DragThumb(Thumb thumb, double min, double max, double nextPos)
         {
-            var currentPos = Canvas.GetLeft(thumb);
-            var nextPos = currentPos + e.HorizontalChange;
-
             nextPos = Math.Max(min, nextPos);
             nextPos = Math.Min(max, nextPos);
 
