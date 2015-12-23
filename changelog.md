@@ -1,5 +1,8 @@
 #Changelog
 
+## v0.2 (sep15, 2015)
+New Control: Range Selector
+
 ## v0.1.0.1 (120315)
 * Fixed memory leak in PullToRefreshListView
 * Changed default PullToRefreshListView.OverscrollLimit to 0.4
