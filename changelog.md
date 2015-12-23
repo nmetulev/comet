@@ -1,6 +1,6 @@
 #Changelog
 
-## v0.2 (sep15, 2015)
+## v0.2 (dec 22, 2015)
 New Control: Range Selector
 
 ## v0.1.0.1 (120315)
