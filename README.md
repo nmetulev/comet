@@ -11,6 +11,7 @@ Controls:
 
  - [SlidableListItem](https://github.com/nmetulev/comet/wiki/SlidableListItem) 
  - [PullToRefreshListView](https://github.com/nmetulev/comet/wiki/PullToRefreshListView)
+ - [RangeSelector](https://github.com/nmetulev/comet/wiki/RangeSelector)
 
 Converters:
 
