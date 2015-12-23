@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Comet</id>
-    <version>0.1.0.1</version>
+    <version>0.2</version>
     <title>Comet</title>
     <authors>Nikola Metulev</authors>
     <owners>Nikola Metulev</owners>
@@ -13,24 +13,11 @@
     <description>Universal Windows Platform Control and Utility library </description>
     <language>en-US</language>
     <releaseNotes><![CDATA[
-	Release v0.1.0.1
-	* Fixed memory leak in PullToRefreshListView
-	* Changed default PullToRefreshListView.OverscrollLimit to 0.4
-	* Documentation update
+	Release v0.2
+	* New Control - Range Selector - double slider control for range values
 	
 	--------------------------------------------
-        First release of Comet v0.1 (301115)
-	Includes:
-	* Comet.Controls.SlidableListItem 
-	* 		 PullToRefreshListView
-
-	* Comet.Converters.DateTimeFormatConverter
-	* 		   HexToSolidColorBrushConverter
-	* 		   ValueWhenConverter
-
-	* Comet.Extensions.RenderToRandomAccessStream
-	* 		   RenderToBitmapImage
-	* 		   FindChildren<T>
+        Full Changelog: https://github.com/nmetulev/comet/blob/master/changelog.md
 	]]></releaseNotes>
     <tags>xaml uwp metro converters pull-to-refresh slidableitem pulltorefresh pulltorefreshlistview refreshablelistview win10 windows10 controls wpdev</tags>
     <dependencies>

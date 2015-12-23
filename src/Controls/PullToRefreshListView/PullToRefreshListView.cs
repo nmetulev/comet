@@ -46,8 +46,6 @@ namespace Comet.Controls
         private double lastOffset = 0.0;
         // used for storing pulled distance
         private double pullDistance = 0.0;
-        // used for flagging render function if the user is overscrolling
-        private bool manipulating = false;
         // used for determining if Refresh should be requested
         DateTime lastRefreshActivation = default(DateTime);
         // used for flagging if refresh has been activated
