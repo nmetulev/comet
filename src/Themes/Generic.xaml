@@ -4,27 +4,27 @@
     xmlns:local="using:Comet.Controls">
     
     <Style TargetType="local:SlidableListItem" >
-        <Setter Property="LeftCommandForeground" Value="White"></Setter>
-        <Setter Property="RightCommandForeground" Value="White"></Setter>
+        <Setter Property="LeftForeground" Value="White"></Setter>
+        <Setter Property="RightForeground" Value="White"></Setter>
         <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
         <Setter Property="Background" Value="White"></Setter>
-        <Setter Property="ActivationWidth" Value="150"></Setter>
+        <Setter Property="ActivationWidth" Value="80"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SlidableListItem">
                     <Grid>
-                        <Grid x:Name="Slider">
-                            <StackPanel x:Name="leftCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                <SymbolIcon Symbol="{TemplateBinding LeftIcon}" Foreground="{TemplateBinding LeftCommandForeground}"></SymbolIcon>
-                                <TextBlock FontSize="15" Margin="10,0,0,0" Text="{TemplateBinding LeftLabel}" Foreground="{TemplateBinding LeftCommandForeground}"></TextBlock>
+                        <Grid x:Name="CommandContainer" Margin="1">
+                            <StackPanel x:Name="LeftCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <SymbolIcon Symbol="{TemplateBinding LeftIcon}" Foreground="{TemplateBinding LeftForeground}"></SymbolIcon>
+                                <TextBlock FontSize="15" Margin="10,0,0,0" Text="{TemplateBinding LeftLabel}" Foreground="{TemplateBinding LeftForeground}"></TextBlock>
                                 <StackPanel.RenderTransform>
                                     <CompositeTransform></CompositeTransform>
                                 </StackPanel.RenderTransform>
                             </StackPanel>
 
-                            <StackPanel x:Name="rightCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                <TextBlock FontSize="15" Margin="0,0,10,0" Text="{TemplateBinding RightLabel}" Foreground="{TemplateBinding RightCommandForeground}"></TextBlock>
-                                <SymbolIcon Symbol="{TemplateBinding RightIcon}" Foreground="{TemplateBinding RightCommandForeground}"></SymbolIcon>
+                            <StackPanel x:Name="RightCommandPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <TextBlock FontSize="15" Margin="0,0,10,0" Text="{TemplateBinding RightLabel}" Foreground="{TemplateBinding RightForeground}"></TextBlock>
+                                <SymbolIcon Symbol="{TemplateBinding RightIcon}" Foreground="{TemplateBinding RightForeground}"></SymbolIcon>
                                 <StackPanel.RenderTransform>
                                     <CompositeTransform></CompositeTransform>
                                 </StackPanel.RenderTransform>
@@ -55,7 +55,7 @@
         <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
         <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
-        <Setter Property="OverscrollLimit" Value="0.5"></Setter>
+        <Setter Property="OverscrollLimit" Value="0.4"></Setter>
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>
@@ -117,6 +117,89 @@
                             </Grid>
                         </ScrollViewer>
                     </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:RangeSelector" >
+        <Setter Property="Background" Value="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlHighlightAccentBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RangeSelector">
+                    <Grid Height="24">
+                        
+                        <Grid.Resources>
+                            <Style x:Key="SliderThumbStyle" TargetType="Thumb">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Height="24" Width="24" Background="Transparent">
+                                                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                        Background="{TemplateBinding Background}" 
+                                                        CornerRadius="4"
+                                                        Width="8"
+                                                        Height="24"
+                                                        HorizontalAlignment="Center"/>
+                                                <Border.RenderTransform>
+                                                    <TranslateTransform X="-8"></TranslateTransform>
+                                                </Border.RenderTransform>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Resources>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="MinPressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MinThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="MaxPressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MaxThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightChromeHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="BackgroundElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="ActiveRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MinThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MaxThumb">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeDisabledHighBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="OutOfRangeContentContainer" Height="24" Background="Transparent" Margin="12,0">
+                            <Rectangle x:Name="BackgroundElement" Height="2" Fill="{TemplateBinding Background}"></Rectangle>
+                        </Border>
+                        <Canvas x:Name="ContainerCanvas" Margin="12,0">
+                            <Rectangle x:Name="ActiveRectangle" Fill="{TemplateBinding Foreground}" Height="2" Canvas.Top="11"></Rectangle>
+                            <Thumb x:Name="MinThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" />
+                            <Thumb x:Name="MaxThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" />
+                        </Canvas>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
