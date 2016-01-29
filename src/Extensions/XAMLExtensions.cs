@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
@@ -63,7 +60,6 @@ namespace Comet.Extensions
                 return image;
             }
         }
-
         /// <summary>
         /// Traverses the Visual Tree and returns a list of elements of type T
         /// </summary>
@@ -71,47 +67,33 @@ namespace Comet.Extensions
         /// <param name="parent">The root of the Visual Tree</param>
         /// <returns>A list of elements of type T, or null</returns>
         public static IEnumerable<T> FindChildren<T>(this DependencyObject parent)
-            where T : DependencyObject
-        {
-            return parent._FindChildren<T>();
-        }
-
-        /// <summary>
-        /// A helper function for FindChildren
-        /// Traverses the Visual Tree and returns a list of elements of type T
-        /// </summary>
-        /// <typeparam name="T">The type of elements to find</typeparam>
-        /// <param name="parent">The root of the Visual Tree</param>
-        /// <param name="list">a list to be used in the recusive calls</param>
-        /// <returns>A list of elements of type T, or null</returns>
-        private static IEnumerable<T> _FindChildren<T>(this DependencyObject parent, List<T> list = null)
                where T : DependencyObject
         {
             // Confirm parent and childName are valid. 
-            if (parent == null) return null;
-
-            if (list == null) list = new List<T>();
+            if (parent == null)
+            {
+                yield break;
+            }
 
             int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+
             for (int i = 0; i < childrenCount; i++)
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
-                // If the child is not of the request child type child
 
-                T childType = child as T;
-                if (childType == null)
+                // If the child is not of the request child type child
+                var childType = child as T;
+
+                if (childType != null)
                 {
-                    _FindChildren<T>(child, list);
+                    yield return childType;
                 }
-                else
+
+                foreach (var grandChild in FindChildren<T>(child))
                 {
-                    list.Add(childType);
+                    yield return grandChild;
                 }
             }
-
-            return list;
         }
-
-
     }
 }
