@@ -202,7 +202,7 @@ namespace Comet.Controls
                 refreshActivated = true;
                 pullProgress = 1.0;
                 if (RefreshIndicatorContent == null)
-                    DefaultIndicatorContent.Text = "Relese to Refresh";
+                    DefaultIndicatorContent.Text = "Release to Refresh";
             }
             else if (lastRefreshActivation != DateTime.MinValue)
             {
