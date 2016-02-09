@@ -119,6 +119,7 @@
     <Compile Include="Controls\RangeSelector\RangeSelector.cs" />
     <Compile Include="Controls\RangeSelector\RangeChangedEventArgs.cs" />
     <Compile Include="Controls\SlidableListItem\SlidableListItem.cs" />
+    <Compile Include="Controls\SwipeableSplitView\SwipeableSplitView.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\HexToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\ValueWhenConverter.cs" />
