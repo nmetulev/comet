@@ -18,7 +18,7 @@ namespace Comet.Extensions
         /// </summary>
         /// <param name="element">The element to render</param>
         /// <returns>An awaitable task that returns the IRandomAccessStream</returns>
-        public static async Task<IRandomAccessStream> RenderToRandomAccessStream(this UIElement element)
+        public static async Task<IRandomAccessStream> RenderToRandomAccessStreamAsync(this UIElement element)
         {
             if (element == null) throw new NullReferenceException();
 
@@ -47,19 +47,42 @@ namespace Comet.Extensions
         }
 
         /// <summary>
+        /// Render a UIElement into a bitmap IRandomAccessStream
+        /// </summary>
+        /// <param name="element">The element to render</param>
+        /// <returns>An awaitable task that returns the IRandomAccessStream</returns>
+        [Obsolete("RenderToRandomAccessStream has been renamed to RenderToRandomAccessStreamAsync. This method will be removed in future releases")]
+        public static Task<IRandomAccessStream> RenderToRandomAccessStream(this UIElement element)
+        {
+            return element.RenderToRandomAccessStreamAsync();
+        }
+
+        /// <summary>
         /// Render a UIElement into a bitmap
         /// </summary>
         /// <param name="element">The element to render</param>
         /// <returns>An awaitable task that returns the BitmapImage</returns>
-        public static async Task<BitmapImage> RenderToBitmapImage(this UIElement element)
+        public static async Task<BitmapImage> RenderToBitmapImageAsync(this UIElement element)
         {
-            using (var stream = await element.RenderToRandomAccessStream())
+            using (var stream = await element.RenderToRandomAccessStreamAsync())
             {
                 BitmapImage image = new BitmapImage();
                 image.SetSource(stream);
                 return image;
             }
         }
+
+        /// <summary>
+        /// Render a UIElement into a bitmap
+        /// </summary>
+        /// <param name="element">The element to render</param>
+        /// <returns>An awaitable task that returns the BitmapImage</returns>
+        [Obsolete ("RenderToBitmapImage has been renamed to RenderToBitmapImageAsync. This method will be removed in future releases")]
+        public static Task<BitmapImage> RenderToBitmapImage(this UIElement element)
+        {
+            return element.RenderToBitmapImageAsync();
+        }
+
         /// <summary>
         /// Traverses the Visual Tree and returns a list of elements of type T
         /// </summary>

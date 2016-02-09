@@ -44,7 +44,7 @@ namespace Test.Tests
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            using (var stream = await Root.RenderToRandomAccessStream())
+            using (var stream = await Root.RenderToRandomAccessStreamAsync())
             {
                 var device = new CanvasDevice();
                 var bitmap = await CanvasBitmap.LoadAsync(device, stream);
