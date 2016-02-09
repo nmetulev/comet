@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Test.Tests"
-    xmlns:comet="using:Comet.Controls"
+    xmlns:c="using:Comet.Controls"
     xmlns:data="using:Sample.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,19 +11,19 @@
 
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <comet:PullToRefreshListView x:Name="listView"
+        <c:PullToRefreshListView x:Name="listView"
                                    ItemsSource="{x:Bind Items}" 
-                                   RefreshActivated="listView_RefreshCommand"
+                                   RefreshRequested="listView_RefreshCommand"
                                    PullProgressChanged="listView_PullProgressChanged"
                                    >
-            <comet:PullToRefreshListView.ItemTemplate>
+            <c:PullToRefreshListView.ItemTemplate>
                 <DataTemplate  x:DataType="data:Item">
                     <TextBlock Text="{x:Bind Title}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"/>
                 </DataTemplate>
-            </comet:PullToRefreshListView.ItemTemplate>
-            <comet:PullToRefreshListView.RefreshIndicatorContent>
+            </c:PullToRefreshListView.ItemTemplate>
+            <c:PullToRefreshListView.RefreshIndicatorContent>
                 <Border HorizontalAlignment="Center" x:Name="refreshindicator" CornerRadius="30" Height="20" Width="20" ></Border>
-            </comet:PullToRefreshListView.RefreshIndicatorContent>
-        </comet:PullToRefreshListView>
+            </c:PullToRefreshListView.RefreshIndicatorContent>
+        </c:PullToRefreshListView>
     </Grid>
 </Page>

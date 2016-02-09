@@ -108,6 +108,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LeakTracker.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -118,8 +119,8 @@
     <Compile Include="Tests\SlidableListItemTest.xaml.cs">
       <DependentUpon>SlidableListItemTest.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tests\SwipeableSplitViewTest.xaml.cs">
-      <DependentUpon>SwipeableSplitViewTest.xaml</DependentUpon>
+    <Compile Include="Tests\RangeSelectorTest.xaml.cs">
+      <DependentUpon>RangeSelectorTest.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tests\UIElementToImageTest.xaml.cs">
       <DependentUpon>UIElementToImageTest.xaml</DependentUpon>
@@ -158,9 +159,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tests\SwipeableSplitViewTest.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Tests\RangeSelectorTest.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Tests\UIElementToImageTest.xaml">
       <SubType>Designer</SubType>

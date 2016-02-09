@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CometMailSample"
-    xmlns:comet="using:Comet.Controls"
+    xmlns:c="using:Comet.Controls"
     xmlns:cometConverters="using:Comet.Converters"
     xmlns:sample="using:Sample.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -53,27 +53,28 @@
 
         <ProgressBar x:Name="progress" VerticalAlignment="Bottom" IsIndeterminate="True" Visibility="Collapsed"></ProgressBar>
         
-        <comet:PullToRefreshListView Grid.Row="1" 
+        <c:PullToRefreshListView Grid.Row="1" 
                                      x:Name="listView" 
                                      Background="Black"
                                      ItemsSource="{x:Bind Emails}" 
-                                     RefreshActivated="listView_RefreshActivated"
+                                     RefreshRequested="listView_RefreshActivated"
                                      PullProgressChanged="listView_PullProgressChanged"
                                         >
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="sample:Email">
-                    <comet:SlidableListItem Height="90"
+                    <c:SlidableListItem Height="90"
                                             LeftIcon="Mail"
                                             LeftLabel="{x:Bind Read, Mode=OneWay, Converter={StaticResource LeftCommandStringWhenTrue}}"
-                                            LeftCommandBackground="{ThemeResource SystemAccentColor}"
-                                            LeftCommandForeground="White"
+                                            LeftBackground="{ThemeResource SystemAccentColor}"
+                                            LeftForeground="White"
                                             LeftCommand="{x:Bind ToggleRead}"
                                             RightIcon="Delete"
                                             RightLabel="Delete"
-                                            RightCommandBackground="Red"
-                                            RightCommandForeground="White"
-                                            RightCommandActivated="SlidableListItem_RightCommandActivated">
-                        <Grid Background="#FF1A1A1A">
+                                            RightBackground="Red"
+                                            RightForeground="White"
+                                            RightCommandRequested="SlidableListItem_RightCommandActivated"
+                                            Background="#FF1A1A1A">
+                        <Grid >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="10"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -92,19 +93,19 @@
                                 <TextBlock VerticalAlignment="Bottom" Text="{x:Bind Time, Converter={StaticResource DateTimeConverter}, ConverterParameter='hh:mm tt' }" FontSize="13.333"></TextBlock>
                             </Grid>
                         </Grid>
-                    </comet:SlidableListItem>
+                    </c:SlidableListItem>
                 </DataTemplate>
             </ListView.ItemTemplate>
             
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                    <Setter Property="Margin" Value="0,0,0,0"></Setter>
+                    <Setter Property="Margin" Value="0,0,0,2"></Setter>
                     <Setter Property="Padding" Value="0"></Setter>
                 </Style>
             </ListView.ItemContainerStyle>
             
-            <comet:PullToRefreshListView.RefreshIndicatorContent>
+            <c:PullToRefreshListView.RefreshIndicatorContent>
                 <Grid Height="60" Margin="5">
                     <TextBlock x:Name="refreshText" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="Collapsed" Text="RELEASE TO REFRESH" Foreground="{ThemeResource SystemAccentColor}" FontSize="12"></TextBlock>
                     <Canvas Height="35" Width="40" VerticalAlignment="Top">
@@ -120,7 +121,7 @@
                         </Canvas.Transform3D>
                     </Canvas>
                 </Grid>
-            </comet:PullToRefreshListView.RefreshIndicatorContent>
-        </comet:PullToRefreshListView>
+            </c:PullToRefreshListView.RefreshIndicatorContent>
+        </c:PullToRefreshListView>
     </Grid>
 </Page>

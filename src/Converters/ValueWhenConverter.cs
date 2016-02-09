@@ -3,6 +3,9 @@ using Windows.UI.Xaml.Data;
 
 namespace Comet.Converters
 {
+    /// <summary>
+    /// Converter for returning a specific value when a value equals to the spcified Value, or returning otherwise
+    /// </summary>
     public class ValueWhenConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)

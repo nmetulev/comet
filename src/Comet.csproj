@@ -114,9 +114,11 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\RefreshableListView.cs" />
-    <Compile Include="Controls\SlidableListItem.cs" />
-    <Compile Include="Controls\SwipeableSplitView.cs" />
+    <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs" />
+    <Compile Include="Controls\PullToRefreshListView\RefreshProgressEventArgs.cs" />
+    <Compile Include="Controls\RangeSelector\RangeSelector.cs" />
+    <Compile Include="Controls\RangeSelector\RangeChangedEventArgs.cs" />
+    <Compile Include="Controls\SlidableListItem\SlidableListItem.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\HexToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\ValueWhenConverter.cs" />
