@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Comet</id>
-    <version>0.2</version>
+    <version>0.2.0.1</version>
     <title>Comet</title>
     <authors>Nikola Metulev</authors>
     <owners>Nikola Metulev</owners>
@@ -13,8 +13,10 @@
     <description>Universal Windows Platform Control and Utility library </description>
     <language>en-US</language>
     <releaseNotes><![CDATA[
-	Release v0.2
-	* New Control - Range Selector - double slider control for range values
+	Release v0.2.0.1
+	* Added async suffix to asynchronous method
+	* Fixed type of word Release (thanks timheuer)
+	* Fixed and optimized FindChildren helper (thanks KooKiz)
 	
 	--------------------------------------------
         Full Changelog: https://github.com/nmetulev/comet/blob/master/changelog.md
