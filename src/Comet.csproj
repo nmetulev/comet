@@ -114,6 +114,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\FlexiblePanel\FlexiblePanel.cs" />
     <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs" />
     <Compile Include="Controls\PullToRefreshListView\RefreshProgressEventArgs.cs" />
     <Compile Include="Controls\RangeSelector\RangeSelector.cs" />
