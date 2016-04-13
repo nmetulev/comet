@@ -29,7 +29,7 @@ namespace Comet.Controls
         /// Identifies the ItemDesiredSize dependency property.
         /// </summary>
         public static readonly DependencyProperty ItemDesiredSizeProperty =
-            DependencyProperty.Register("ItemDesiredSize", typeof(double), typeof(FlexiblePanel), new PropertyMetadata(150d));
+            DependencyProperty.Register("ItemDesiredSize", typeof(double), typeof(FlexiblePanel), new PropertyMetadata(150d, PropertyChanged));
 
 
         /// <summary>
@@ -48,7 +48,14 @@ namespace Comet.Controls
         /// Identifies the OrientationProperty dependency property.
         /// </summary>
         public static readonly DependencyProperty OrientationProperty =
-            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(FlexiblePanel), new PropertyMetadata(Orientation.Horizontal));
+            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(FlexiblePanel), new PropertyMetadata(Orientation.Horizontal, PropertyChanged));
+
+        private static void PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as FlexiblePanel).InvalidateMeasure();
+            (d as FlexiblePanel).InvalidateArrange();
+            (d as FlexiblePanel).UpdateLayout();
+        }
 
         /// <summary>
         /// Gets or set if the child elements animate to the new location when control is resized
@@ -179,14 +186,14 @@ namespace Comet.Controls
                     offsetAnimation.Duration = TimeSpan.FromMilliseconds(200);
                     offsetAnimation.InsertKeyFrame(1, new Vector3((float)x, (float)y, 0));
                     visual.StartAnimation("Offset", offsetAnimation);
-
-                    x += child.DesiredSize.Width;
-                    previousChildHeight = child.DesiredSize.Height;
                 }
                 else
                 {
                     child.Arrange(new Rect(x, y, child.DesiredSize.Width, child.DesiredSize.Height));
                 }
+
+                x += child.DesiredSize.Width;
+                previousChildHeight = child.DesiredSize.Height;
             }
 
             return new Size(finalSize.Width, y + previousChildHeight);

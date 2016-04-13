@@ -44,6 +44,7 @@ namespace Test
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             var testItems = new List<TestItem>();
+            testItems.Add(new TestItem() { Name = "FlexiblePanel", Page = typeof(FlexiblePanelTest) });
             testItems.Add(new TestItem() { Name = "PullToRefreshListView", Page = typeof(RefreshableListViewTest) });
             testItems.Add(new TestItem() { Name = "SlidableListItem", Page = typeof(SlidableListItem) });
             testItems.Add(new TestItem() { Name = "Extension:UIElementToImage", Page = typeof(UIElementToImage) });
