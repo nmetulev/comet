@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Comet</id>
-    <version>0.2.0.1</version>
-    <title>Comet</title>
+    <version>0.2.0.2</version>
+    <title>Comet [DEPRECATED]</title>
     <authors>Nikola Metulev</authors>
     <owners>Nikola Metulev</owners>
     <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
@@ -13,13 +13,9 @@
     <description>Universal Windows Platform Control and Utility library </description>
     <language>en-US</language>
     <releaseNotes><![CDATA[
-	Release v0.2.0.1
-	* Added async suffix to asynchronous method
-	* Fixed type of word Release (thanks timheuer)
-	* Fixed and optimized FindChildren helper (thanks KooKiz)
-	
-	--------------------------------------------
-        Full Changelog: https://github.com/nmetulev/comet/blob/master/changelog.md
+	DEPRECATED
+
+	This package is not supported anymore. All Controlls and Utilites have been moved to the official UWP Community Toolkit (https://github.com/Microsoft/UWPCommunityToolkit). Please use it instead.
 	]]></releaseNotes>
     <tags>xaml uwp metro converters pull-to-refresh slidableitem pulltorefresh pulltorefreshlistview refreshablelistview win10 windows10 controls wpdev</tags>
     <dependencies>
