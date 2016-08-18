@@ -1,5 +1,9 @@
 # Comet
 
+## DEPRECATED 
+
+This package is not supported anymore. All Controlls and Utilites have been moved to the official [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit) where I will continue to update and support them. Please use it instead.
+
 ![Comet](http://i.imgur.com/NvyoRv0.png)
 
 Comet is an open source library for .NET/XAML Universal Windows Apps that attempts to fill the gaps and provide a collection of APIs and controls based on the feedback and work from the developer community. The XAML/.NET framework for the Universal Windows Platform is a continuously growing developer framework, but there are controls and utilities that are missing.
